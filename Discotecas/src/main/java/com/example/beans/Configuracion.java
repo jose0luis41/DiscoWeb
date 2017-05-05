@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.echo;
+package com.example.beans;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -13,7 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,35 +21,34 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author joseluissacanamboy
  */
 @Entity
-@Table(name = "Configuracion", catalog = "discotecas", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Configuracion.findAll", query = "SELECT c FROM Configuracion c")
     , @NamedQuery(name = "Configuracion.findByIdConfiguracion", query = "SELECT c FROM Configuracion c WHERE c.idConfiguracion = :idConfiguracion")
     , @NamedQuery(name = "Configuracion.findByMaxEntradas", query = "SELECT c FROM Configuracion c WHERE c.maxEntradas = :maxEntradas")
-    , @NamedQuery(name = "Configuracion.findByMaxReservas", query = "SELECT c FROM Configuracion c WHERE c.maxReservas = :maxReservas")})
+    , @NamedQuery(name = "Configuracion.findByMaxReservas", query = "SELECT c FROM Configuracion c WHERE c.maxReservas = :maxReservas")
+    , @NamedQuery(name = "Configuracion.findByPrecio", query = "SELECT c FROM Configuracion c WHERE c.precio = :precio")})
 public class Configuracion implements Serializable {
-
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "precioEntrada", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioEntrada;
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idConfiguracion", nullable = false)
+    @Column(nullable = false)
     private Integer idConfiguracion;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "maxEntradas", nullable = false)
+    @Column(nullable = false)
     private int maxEntradas;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "maxReservas", nullable = false)
+    @Column(nullable = false)
     private int maxReservas;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal precio;
 
     public Configuracion() {
     }
@@ -59,10 +57,11 @@ public class Configuracion implements Serializable {
         this.idConfiguracion = idConfiguracion;
     }
 
-    public Configuracion(Integer idConfiguracion, int maxEntradas, int maxReservas) {
+    public Configuracion(Integer idConfiguracion, int maxEntradas, int maxReservas, BigDecimal precio) {
         this.idConfiguracion = idConfiguracion;
         this.maxEntradas = maxEntradas;
         this.maxReservas = maxReservas;
+        this.precio = precio;
     }
 
     public Integer getIdConfiguracion() {
@@ -89,6 +88,14 @@ public class Configuracion implements Serializable {
         this.maxReservas = maxReservas;
     }
 
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -111,15 +118,7 @@ public class Configuracion implements Serializable {
 
     @Override
     public String toString() {
-        return "com.example.echo.Configuracion[ idConfiguracion=" + idConfiguracion + " ]";
-    }
-
-    public BigDecimal getPrecioEntrada() {
-        return precioEntrada;
-    }
-
-    public void setPrecioEntrada(BigDecimal precioEntrada) {
-        this.precioEntrada = precioEntrada;
+        return "com.example.beans.Configuracion[ idConfiguracion=" + idConfiguracion + " ]";
     }
     
 }

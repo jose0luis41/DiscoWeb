@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.echo;
+package com.example.beans;
 
 import com.google.appengine.repackaged.org.codehaus.jackson.annotate.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -33,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author joseluissacanamboy
  */
 @Entity
-@Table(name = "Usuario", catalog = "discotecas", schema = "", uniqueConstraints = {
+@Table(uniqueConstraints = {
     @UniqueConstraint(columnNames = {"correo"})
     , @UniqueConstraint(columnNames = {"cedula"})})
 @XmlRootElement
@@ -48,40 +49,41 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Usuario.findByContrasena", query = "SELECT u FROM Usuario u WHERE u.contrasena = :contrasena")})
 public class Usuario implements Serializable {
 
-@Id
+    private static final long serialVersionUID = 1L;
+    @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idUsuario", nullable = false)
+    @Column(nullable = false)
     private Integer idUsuario;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
-    @Column(name = "cedula", nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String cedula;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "correo", nullable = false, length = 45)
+    @Column(nullable = false, length = 45)
     private String correo;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "nombre", nullable = false, length = 45)
+    @Column(nullable = false, length = 45)
     private String nombre;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "telefono", nullable = false, length = 45)
+    @Column(nullable = false, length = 45)
     private String telefono;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fechaNac", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fechaNac;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "contrasena", nullable = false, length = 45)
+    @Column(nullable = false, length = 45)
     private String contrasena;
     @JsonIgnore
     @JoinColumn(name = "Rol_idRol", referencedColumnName = "idRol", nullable = false)
@@ -90,18 +92,25 @@ public class Usuario implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioidUsuario")
     private List<Reserva> reservaList;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioidUsuario")
     private List<Reporte> reporteList;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioidUsuario")
     private List<Entrada> entradaList;
 
-
     public Usuario() {
+
+        this.reservaList = new LinkedList<>();
+        this.reporteList = new LinkedList<>();
+        this.entradaList = new LinkedList<>();
     }
 
     public Usuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
+        this.reservaList = new LinkedList<>();
+        this.reporteList = new LinkedList<>();
+        this.entradaList = new LinkedList<>();
     }
 
     public Usuario(Rol rol, Integer idUsuario, String cedula, String correo, String nombre, String telefono, Date fechaNac, String contrasena) {
@@ -113,6 +122,9 @@ public class Usuario implements Serializable {
         this.telefono = telefono;
         this.fechaNac = fechaNac;
         this.contrasena = contrasena;
+        this.reservaList = new LinkedList<>();
+        this.reporteList = new LinkedList<>();
+        this.entradaList = new LinkedList<>();
     }
 
     public Integer getIdUsuario() {
@@ -228,7 +240,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "com.example.echo.Usuario[ idUsuario=" + idUsuario + " ]";
+        return "com.example.beans.Usuario[ idUsuario=" + idUsuario + " ]";
     }
-    
+
 }

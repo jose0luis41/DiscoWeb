@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.echo;
+package com.example.beans;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,7 +25,6 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author joseluissacanamboy
  */
 @Entity
-@Table(name = "TipoReporte", catalog = "discotecas", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoReporte.findAll", query = "SELECT t FROM TipoReporte t")
@@ -38,10 +36,10 @@ public class TipoReporte implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idTipoReporte", nullable = false)
+    @Column(nullable = false)
     private Integer idTipoReporte;
     @Size(max = 45)
-    @Column(name = "tipo", length = 45)
+    @Column(length = 45)
     private String tipo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoReporteidTipoReporte")
     private List<Reporte> reporteList;
@@ -100,7 +98,7 @@ public class TipoReporte implements Serializable {
 
     @Override
     public String toString() {
-        return "com.example.echo.TipoReporte[ idTipoReporte=" + idTipoReporte + " ]";
+        return "com.example.beans.TipoReporte[ idTipoReporte=" + idTipoReporte + " ]";
     }
     
 }

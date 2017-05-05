@@ -24,7 +24,7 @@ import java.util.List;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.Named;
 import java.util.Date;
-
+import com.example.beans.*;
 /**
  * The Echo API which Endpoints will be exposing.
  */
@@ -247,5 +247,10 @@ public class Echo {
     public Entrada createTicket(@Named("cedula") String cedulaUsu) throws Exception {
 
         return entradaLogic.createTicket(cedulaUsu);
+    }
+    
+     public Entrada getTicekt(@Named("codigoQR") String codigoQR) {
+
+        return entradaLogic.getTicekt(codigoQR);
     }
 }

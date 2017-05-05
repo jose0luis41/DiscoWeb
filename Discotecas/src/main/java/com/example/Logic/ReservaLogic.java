@@ -5,9 +5,9 @@
  */
 package com.example.Logic;
 
-import com.example.echo.Reporte;
-import com.example.echo.Reserva;
-import com.example.echo.Usuario;
+import com.example.beans.Reporte;
+import com.example.beans.Reserva;
+import com.example.beans.Usuario;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
@@ -38,15 +38,14 @@ public class ReservaLogic {
     }
 
     /**
-     * Name: createReservation Description: Endpoint que crea una
-     * reserva en el sistema Method: Get
+     * Name: createReservation Description: Endpoint que crea una reserva en el
+     * sistema Method: Get
+     *
      * @param reserva
      * @param cedula
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
-    
-    
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "createReservation", path = "createReservation/success")
     public Reserva createReservation(Reserva reserva, @Named("cedulaCliente") String cedula) throws Exception {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
@@ -54,7 +53,11 @@ public class ReservaLogic {
         em.getTransaction().begin();
 
         Usuario user = em.createNamedQuery("Usuario.findByCedula", Usuario.class).setParameter("cedula", cedula).getSingleResult();
-        Reserva tmp = new Reserva(user, generarNumeroConsecuenteReserva(),reserva.getFechaCaducidad());
+        Reserva tmp = new Reserva();
+        
+        tmp.setUsuarioidUsuario(user);
+        tmp.setIdReserva(generarNumeroConsecuenteReserva());
+        tmp.setFechaCaducidad(new Date(System.currentTimeMillis()));
         Date dateToday = new Date(System.currentTimeMillis());
         tmp.setEstado(new Short("0"));
         tmp.setFechaReserva(dateToday);
@@ -62,8 +65,8 @@ public class ReservaLogic {
         em.getTransaction().commit();
         return tmp;
     }
-    
-        /**
+
+    /**
      * Name: deleteReservation Description: Endpoint que elimina una reserva del
      * sistema Method: Put
      *
@@ -81,10 +84,10 @@ public class ReservaLogic {
         em.getTransaction().commit();
         return reservationFound;
     }
-    
-        /**
-     * Name: findReservation Description: Endpoint que busca una reserva del sistema
-     * Method: put
+
+    /**
+     * Name: findReservation Description: Endpoint que busca una reserva del
+     * sistema Method: put
      *
      * @param id
      * @return Reserva consultado del sistema
@@ -104,13 +107,20 @@ public class ReservaLogic {
 
         return findReservation;
     }
-    
-       private int generarNumeroConsecuenteReserva() {
+
+    private int generarNumeroConsecuenteReserva() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
         em.getTransaction().begin();
-        int cantidad = (int) em.createQuery("SELECT MAX (res.idReserva) FROM Reserva res").getSingleResult();
-        cantidad = cantidad + 1;
+        int cantidad = 0;
+
+        if (em.createQuery("SELECT MAX (res.idReserva) FROM Reserva res").getSingleResult() == null) {
+            cantidad = 1;
+        } else {
+            cantidad = (int) em.createQuery("SELECT MAX (res.idReserva) FROM Reserva res").getSingleResult();
+            cantidad = cantidad + 1;
+
+        }
         em.getTransaction().commit();
         return cantidad;
     }

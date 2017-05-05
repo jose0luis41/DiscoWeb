@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.echo;
+package com.example.beans;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -28,7 +27,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author joseluissacanamboy
  */
 @Entity
-@Table(name = "Entrada", catalog = "discotecas", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Entrada.findAll", query = "SELECT e FROM Entrada e")
@@ -43,27 +41,27 @@ public class Entrada implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idEntrada", nullable = false)
+    @Column(nullable = false)
     private Integer idEntrada;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
-    @Column(name = "precio", nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fechaCompra", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fechaCompra;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fechaVencimiento", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fechaVencimiento;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
-    @Column(name = "codigoQR", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String codigoQR;
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", nullable = false)
     @ManyToOne(optional = false)
@@ -76,8 +74,8 @@ public class Entrada implements Serializable {
         this.idEntrada = idEntrada;
     }
 
-    public Entrada(Integer idEntrada,Usuario usuarioId, BigDecimal precio, Date fechaCompra, Date fechaVencimiento, String codigoQR) {
-        this.usuarioidUsuario = usuarioId;
+    public Entrada(Integer idEntrada, Usuario user,BigDecimal precio, Date fechaCompra, Date fechaVencimiento, String codigoQR) {
+        this.usuarioidUsuario = user;
         this.idEntrada = idEntrada;
         this.precio = precio;
         this.fechaCompra = fechaCompra;
@@ -155,7 +153,7 @@ public class Entrada implements Serializable {
 
     @Override
     public String toString() {
-        return "com.example.echo.Entrada[ idEntrada=" + idEntrada + " ]";
+        return "com.example.beans.Entrada[ idEntrada=" + idEntrada + " ]";
     }
     
 }

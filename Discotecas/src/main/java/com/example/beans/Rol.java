@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.echo;
+package com.example.beans;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,7 +25,6 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author joseluissacanamboy
  */
 @Entity
-@Table(name = "Rol", catalog = "discotecas", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r")
@@ -38,12 +36,12 @@ public class Rol implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idRol", nullable = false)
+    @Column(nullable = false)
     private Integer idRol;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "nombre", nullable = false, length = 45)
+    @Column(nullable = false, length = 45)
     private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rolidRol")
     private List<Usuario> usuarioList;
@@ -107,7 +105,7 @@ public class Rol implements Serializable {
 
     @Override
     public String toString() {
-        return "com.example.echo.Rol[ idRol=" + idRol + " ]";
+        return "com.example.beans.Rol[ idRol=" + idRol + " ]";
     }
     
 }

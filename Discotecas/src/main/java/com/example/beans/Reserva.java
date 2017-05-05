@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.echo;
+package com.example.beans;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -26,7 +25,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author joseluissacanamboy
  */
 @Entity
-@Table(name = "Reserva", catalog = "discotecas", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Reserva.findAll", query = "SELECT r FROM Reserva r")
@@ -40,20 +38,20 @@ public class Reserva implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idReserva", nullable = false)
+    @Column(nullable = false)
     private Integer idReserva;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fechaCaducidad", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCaducidad;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "estado", nullable = false)
+    @Column(nullable = false)
     private short estado;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fechaReserva", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaReserva;
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", nullable = false)
@@ -63,14 +61,18 @@ public class Reserva implements Serializable {
     public Reserva() {
     }
 
-    public Reserva(Integer idReserva) {
+    public Reserva(Usuario user, Integer idReserva, Date fecha) {
+        this.usuarioidUsuario = user;
         this.idReserva = idReserva;
+        this.fechaReserva = fecha;
+
     }
 
-    public Reserva(Usuario usuario,Integer idReserva, Date fechaCaducidad) {
-        this.usuarioidUsuario=usuario;
+    public Reserva(Integer idReserva, Date fechaCaducidad, short estado, Date fechaReserva) {
         this.idReserva = idReserva;
         this.fechaCaducidad = fechaCaducidad;
+        this.estado = estado;
+        this.fechaReserva = fechaReserva;
     }
 
     public Integer getIdReserva() {
@@ -135,7 +137,7 @@ public class Reserva implements Serializable {
 
     @Override
     public String toString() {
-        return "com.example.echo.Reserva[ idReserva=" + idReserva + " ]";
+        return "com.example.beans.Reserva[ idReserva=" + idReserva + " ]";
     }
-    
+
 }

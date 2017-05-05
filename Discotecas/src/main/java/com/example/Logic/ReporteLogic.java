@@ -5,9 +5,9 @@
  */
 package com.example.Logic;
 
-import com.example.echo.Reporte;
-import com.example.echo.Usuario;
-import com.example.echo.TipoReporte;
+import com.example.beans.Reporte;
+import com.example.beans.Usuario;
+import com.example.beans.TipoReporte;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
@@ -19,8 +19,6 @@ import javax.persistence.EntityManager;
  * @author dylan9538
  */
 public class ReporteLogic {
-
-   
 
     /**
      * Name: getAllReports Description: Endpoint que consulta todos los reportes
@@ -65,7 +63,6 @@ public class ReporteLogic {
         return reporteCreado;
     }
 
-    
     /**
      * Name: deleteReport Description: Endpoint que elimina un reporte del
      * sistema Method: Put
@@ -132,7 +129,13 @@ public class ReporteLogic {
     private int generarNumeroConsecuenteReporte() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
-        int cantidad = (int) em.createQuery("SELECT MAX (r.idReporte) FROM Reporte r").getSingleResult();
+        int cantidad = 0;
+        if (em.createQuery("SELECT MAX (r.idReporte) FROM Reporte r").getSingleResult() == null) {
+            cantidad = 1;
+        } else {
+            cantidad = (int) em.createQuery("SELECT MAX (r.idReporte) FROM Reporte r").getSingleResult();
+            cantidad = cantidad + 1;
+        }
         cantidad = cantidad + 1;
         em.getTransaction().commit();
         return cantidad;

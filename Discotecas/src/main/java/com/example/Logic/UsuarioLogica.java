@@ -5,8 +5,8 @@
  */
 package com.example.Logic;
 
-import com.example.echo.Rol;
-import com.example.echo.Usuario;
+import com.example.beans.Rol;
+import com.example.beans.Usuario;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
@@ -18,8 +18,6 @@ import javax.persistence.EntityManager;
  *
  * @author joseluissacanamboy
  */
-
-
 public class UsuarioLogica {
 
     /**
@@ -30,7 +28,7 @@ public class UsuarioLogica {
      */
     @ApiMethod(name = "showUsers")
     public List<Usuario> getAllUsers() {
-        
+
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
         List<Usuario> usuarios = em.createNamedQuery("Usuario.findAll", Usuario.class).getResultList();
@@ -41,6 +39,7 @@ public class UsuarioLogica {
     /**
      * Name: createUser Description: Endpoint que crea un nuevo usuario en el
      * sistema Method: Post
+     *
      * @param usuario
      * @param Rol
      * @return Usuario nuevo en el sistema
@@ -63,6 +62,7 @@ public class UsuarioLogica {
     /**
      * Name: editUser Description: Endpoint que edita un usuario del sistema
      * Method: Put
+     *
      * @param cedula
      * @param rol
      * @param userName
@@ -102,6 +102,7 @@ public class UsuarioLogica {
     /**
      * Name: deleteUser Description: Endpoint que elimina un usuario del sistema
      * Method: Put
+     *
      * @param cedula
      * @return Usuario borrado del sistema
      */
@@ -136,7 +137,13 @@ public class UsuarioLogica {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
         em.getTransaction().begin();
-        int cantidad = (int) em.createQuery("SELECT MAX (usu.idUsuario) FROM Usuario usu").getSingleResult();
+        int cantidad = 0;
+        if (em.createQuery("SELECT MAX (usu.idUsuario) FROM Usuario usu").getSingleResult() == null) {
+            cantidad = 1;
+        } else {
+            cantidad = (int) em.createQuery("SELECT MAX (usu.idUsuario) FROM Usuario usu").getSingleResult();
+            cantidad = cantidad + 1;
+        }
         System.out.println(cantidad);
         cantidad = cantidad + 1;
         em.getTransaction().commit();

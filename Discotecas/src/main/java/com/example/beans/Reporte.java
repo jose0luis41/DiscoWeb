@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.echo;
+package com.example.beans;
 
 import com.google.appengine.repackaged.org.codehaus.jackson.annotate.JsonIgnore;
 import java.io.Serializable;
@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -28,7 +27,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author joseluissacanamboy
  */
 @Entity
-@Table(name = "Reporte", catalog = "discotecas", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Reporte.findAll", query = "SELECT r FROM Reporte r")
@@ -41,21 +39,20 @@ public class Reporte implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idReporte", nullable = false)
+    @Column(nullable = false)
     private Integer idReporte;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fecha", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fecha;
     @Size(max = 250)
-    @Column(name = "contenido", length = 250)
+    @Column(length = 250)
     private String contenido;
     @JsonIgnore
     @JoinColumn(name = "TipoReporte_idTipoReporte", referencedColumnName = "idTipoReporte", nullable = false)
     @ManyToOne(optional = false)
     private TipoReporte tipoReporteidTipoReporte;
-    @JsonIgnore
     @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", nullable = false)
     @ManyToOne(optional = false)
     private Usuario usuarioidUsuario;
@@ -67,12 +64,12 @@ public class Reporte implements Serializable {
         this.idReporte = idReporte;
     }
 
-    public Reporte(TipoReporte tipoReporte, Usuario usuarioId, Integer idReporte, Date fecha, String contenido) {
-        this.usuarioidUsuario = usuarioId;
-        this.tipoReporteidTipoReporte = tipoReporte;
+    public Reporte(TipoReporte tipoR, Usuario user, Integer idReporte, Date fecha,String contenido) {
+        this.tipoReporteidTipoReporte = tipoR;
+        this.contenido = contenido;
+        this.usuarioidUsuario = user;
         this.idReporte = idReporte;
         this.fecha = fecha;
-        this.contenido = contenido;
     }
 
     public Integer getIdReporte() {
@@ -137,7 +134,7 @@ public class Reporte implements Serializable {
 
     @Override
     public String toString() {
-        return "com.example.echo.Reporte[ idReporte=" + idReporte + " ]";
+        return "com.example.beans.Reporte[ idReporte=" + idReporte + " ]";
     }
-
+    
 }
