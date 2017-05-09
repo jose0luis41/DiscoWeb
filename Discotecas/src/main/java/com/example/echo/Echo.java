@@ -15,16 +15,15 @@
  */
 package com.example.echo;
 
-import com.example.Logic.EntradaLogic;
-import com.example.Logic.UsuarioLogica;
-import com.example.Logic.ReporteLogic;
-import com.example.Logic.ReservaLogic;
+import com.example.Logic.*;
 
 import java.util.List;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.Named;
 import java.util.Date;
 import com.example.beans.*;
+import java.math.BigDecimal;
+
 /**
  * The Echo API which Endpoints will be exposing.
  */
@@ -38,16 +37,22 @@ import com.example.beans.*;
 
 public class Echo {
 
-    private UsuarioLogica usuarioLogica;
-    private ReporteLogic reporteLogic;
-    private ReservaLogic reservaLogic;
-    private EntradaLogic entradaLogic;
+    private final AsistenteLogica assistantLogic;
+    private final ReservaLogic reservaLogic;
+    private final EntradaLogic entradaLogic;
+    private final AdministradorLogica administratorLogic;
+    private final DiscotecaLogic discotecaLogic;
+    private final EventoLogica eventoLogica;
+    private final AsistenteEventoLogica asistenteEventoLogic;
 
     public Echo() {
-        usuarioLogica = new UsuarioLogica();
-        reporteLogic = new ReporteLogic();
+        eventoLogica = new EventoLogica();
+        discotecaLogic = new DiscotecaLogic();
+        assistantLogic = new AsistenteLogica();
+        administratorLogic = new AdministradorLogica();
         reservaLogic = new ReservaLogic();
         entradaLogic = new EntradaLogic();
+        asistenteEventoLogic = new AsistenteEventoLogica();
     }
 
     /**
@@ -62,195 +67,381 @@ public class Echo {
      * method will default to POST.
      */
     // [START echo_method]
-    //---------------------------------------USUARIOS----------------------------------------------//
     //@author joseluissacanamboy
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------ASISTENTES----------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
     /**
-     * Name: darTodosUsuarios Description: Delegado que consulta todos los
-     * usuarios en el sistema Method: Get
-     *
-     * @return Lista de usuarios en el sistema
-     */
-    public List<Usuario> darTodosUsuarios() {
-        return usuarioLogica.getAllUsers();
-    }
-
-    /**
-     * Name: createUser Description: Delegado que crea un nuevo usuario en el
-     * sistema
-     *
-     * @param usuario
-     * @param Rol
-     * @return Usuario nuevo en el sistema
-     * @throws Exception cuando la cedula o el correo ya existan
-     */
-    public Usuario createUser(Usuario usuario, @Named("Rol") int Rol) throws Exception {
-
-        return usuarioLogica.createUser(usuario, Rol);
-    }
-
-    /**
-     * Name: editUser Description: Delegado que edita un usuario del sistema
-     * Method: Put
-     *
-     * @param cedula
-     * @param rol
-     * @param userName
-     * @param correo
-     * @param telefono
-     * @param fechaNac
-     * @param contrasena
-     * @return Usuario modificado
-     * @throws Exception cuando el rol ingresado no existe
-     */
-    public Usuario editUser(@Named("Id") String cedula, @Named("Rol") int rol, @Named("Name") String userName, @Named("Email") String correo, @Named("Telephone") String telefono, @Named("Birthday") Date fechaNac, @Named("Password") String contrasena) throws Exception {
-
-        return usuarioLogica.editUser(cedula, rol, userName, correo, telefono, fechaNac, contrasena);
-    }
-
-    /**
-     * Name: deleteUser Description: Delegado que elimina un usuario del sistema
-     * Method: Put
-     *
-     * @param cedula
-     * @return Usuario borrado del sistema
-     */
-    public Usuario deleteUser(@Named("cedula") String cedula) {
-
-        return usuarioLogica.deleteUser(cedula);
-    }
-
-    /**
-     * Name: findUser Description: Delegado que busca un usuario del sistema
-     * Method: Put
-     *
-     * @param cedula
-     * @return Usuario encontrado del sistema
-     */
-    public Usuario findUser(@Named("cedula") String cedula) throws Exception {
-        return usuarioLogica.findUser(cedula);
-    }
-
-    //---------------------------------------REPORTES----------------------------------------------//
-    //@author dylantorres
-    /**
-     * Name: getAllReports Description: Delegado que consulta todos los reportes
+     * Name: getAsistants Description: Delegado que consulta todos los asistente
      * en el sistema Method: Get
      *
-     * @return Lista de reportes en el sistema
+     * @return Lista de usuarios en el sistema
      */
-    public List<Reporte> getAllReports() {
-
-        return reporteLogic.getAllReports();
+    public List<Asistente> getAsistants() {
+        return assistantLogic.getAssistants();
     }
 
     /**
-     * Name: createReporte Description: Delegado que crea un nuevo reporte en el
-     * sistema
+     * Name: createAssistant Description: Delegado que crea un nuevo asistente
+     * en el sistema
      *
-     * @param reporte
-     * @param tiporeporte
-     * @param cedulaUsu
-     * @return Usuario nuevo en el sistema
-     * @throws Exception cuando la cedula o el correo ya existan
+     * @param assistant
+     * @return
+     * @throws Exception
      */
-    public Reporte createReporte(Reporte reporte, @Named("TipoReporte") int TipoReporte, @Named("cedula") String cedulaUsu) throws Exception {
+    public Asistente createAssistant(Asistente assistant) throws Exception {
 
-        return reporteLogic.createReport(reporte, TipoReporte, cedulaUsu);
+        return assistantLogic.createAssistant(assistant);
     }
 
     /**
-     * Name: getReportsUser Description: Delegado que busca todod los reportes
-     * de un usuario dado Method: Put
-     *
-     * @param cedula
-     * @return Reporte borrado del sistema
-     */
-    public List<Reporte> getReportsUser(@Named("cedula") String cedula) throws Exception {
-        return reporteLogic.findReportsUser(cedula);
-    }
-
-    /**
-     * Name: deleteReport Description: Delegado que elimina un reporte del
+     * Name: editAssistant Description: Delegado que edita un asistente del
      * sistema Method: Put
      *
-     * @param id
-     * @return Reporte borrado del sistema
+     * @param cedula
+     * @param assistantName
+     * @param correo
+     * @param telefono
+     * @param fechaNacimiento
+     * @param contrasena
+     * @return
+     * @throws Exception cuando un dato es null
      */
-    public Reporte deleteReport(@Named("id") int id) {
+    public Asistente editAssistant(@Named("Id") String cedula, @Named("Name") String assistantName, @Named("Email") String correo, @Named("Telephone") String telefono, @Named("Birthday") Date fechaNacimiento, @Named("Password") String contrasena) throws Exception {
 
-        return reporteLogic.deleteReport(id);
+        return assistantLogic.editAssistant(cedula, assistantName, correo, telefono, fechaNacimiento, contrasena);
     }
 
     /**
-     * Name: findReporte Description: Delegado que busca un reporte del sistema
-     * Method: Put
+     * Name: deleteAssistant Description: Delegado que elimina un asistente del
+     * sistema Method: DELETE
      *
-     * @param id
-     * @return Usuario encontrado del sistema
+     * @param cedula
+     * @return Asistente borrado del sistema
      */
-    public Reporte findReporte(@Named("id") int id) throws Exception {
-        return reporteLogic.findReport(id);
+    public Asistente deleteAssistant(@Named("cedula") String cedula) {
+
+        return assistantLogic.deleteAssistant(cedula);
     }
 
     /**
-     * Name: getAllReservations Description: Delegado que consulta todas las
-     * reservas en el sistema Method: Get
+     * Name: findAssistant Description: Delegado que busca un asistente del
+     * sistema Method: Put
+     *
+     * @param cedula
+     * @return Asistente encontrado del sistema
+     */
+    public Asistente findAssistant(@Named("cedula") String cedula) throws Exception {
+        return assistantLogic.findAssistant(cedula);
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------ADMINISTRADOR-----------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    /**
+     * Name: getAdministrators Description: Delegado que consulta todos los
+     * administradores en el sistema Method: Get
      *
      * @return Lista de usuarios en el sistema
      */
-    public List<Reserva> getAllReservations() {
-        return reservaLogic.getAllReservations();
+    public List<Adminstrador> getAdministrators() {
+        return administratorLogic.getAdministrators();
     }
 
     /**
-     * Name: createReservation Description: Delegado que crea una 
-     * reserva en el sistema Method: Get
+     * Name: createAdministrator Description: Delegado que crea un nuevo
+     * administrador en el sistema
      *
-     * @return Reserva creada
+     * @param adminstrador
+     * @param idDiscoteca
+     * @return Administador creado
+     * @throws Exception
      */
-    public Reserva createReservation(Reserva reserva, @Named("cedulaCliente") String cedula) throws Exception {
-        return reservaLogic.createReservation(reserva, cedula);
+    public Adminstrador createAdministrator(Adminstrador adminstrador, @Named("idDiscoteca") Integer idDiscoteca) throws Exception {
+        return administratorLogic.createAdministrator(adminstrador,idDiscoteca);
     }
 
     /**
-     * Name: deleteReservation Description: Delegado que borra una
-     * reserva en el sistema Method: Get
+     * Name: editAdministrator Description: Delegado que edita un administrador
+     * del sistema Method: PUT
      *
-     * @return Reserva eliminada
+     * @param cedula
+     * @param administadorName
+     * @param correo
+     * @param telefono
+     * @param fechaNacimiento
+     * @param contrasena
+     * @return
+     * @throws Exception cuando un dato es null
      */
-    public Reserva deleteReservation(@Named("id") int id) {
-
-        return reservaLogic.deleteReservation(id);
+    public Adminstrador editAdministrator(@Named("Id") String cedula, @Named("Name") String administadorName, @Named("Email") String correo, @Named("Telephone") String telefono, @Named("Birthday") Date fechaNacimiento, @Named("Password") String contrasena) throws Exception {
+        return administratorLogic.editAdministrator(cedula, administadorName, correo, telefono, fechaNacimiento, contrasena);
     }
 
     /**
-     * Name: findReservation Description: Delegado que consulta una 
-     * reserva en el sistema Method: Get
+     * Name: deleteAdministrator Description: Delegado que elimina un
+     * administrador del sistema Method: DELETE
      *
-     * @return Reserva consultada
+     * @param cedula
+     * @return Administrador borrado del sistema
      */
-    public Reserva findReservation(@Named("id") int id) throws Exception {
-
-        return reservaLogic.findReservation(id);
+    public Adminstrador deleteAdministrator(@Named("cedula") String cedula) {
+        return administratorLogic.deleteAdministrator(cedula);
     }
-    
-      /**
-     * Name: getAllTicekts Description: Delegado que consulta todas las
-     * entradas en el sistema Method: Get
+
+    /**
+     * Name: findAdministrator Description: Delegado que busca un administrador
+     * del sistema Method: PUT
      *
-     * @return Lista de usuarios en el sistema
+     * @param cedula
+     * @return Administrador encontrado del sistema
      */
-    public List<Entrada> getAllTicekts() {
-        return entradaLogic.getAllTicekts();
+    public Adminstrador findAdministrator(@Named("cedula") String cedula) throws Exception {
+        return administratorLogic.findAdministrator(cedula);
     }
-    
-    public Entrada createTicket(@Named("cedula") String cedulaUsu) throws Exception {
 
-        return entradaLogic.createTicket(cedulaUsu);
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------ENTRADA-----------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    /**
+     * Name: getTicekts Description: Delegado que consulta todas las entradas en
+     * el sistema Method: GET
+     *
+     * @return Lista de entradas en el sistema
+     */
+    public List<Entrada> getTicekts() {
+        return entradaLogic.getTicekts();
     }
-    
-     public Entrada getTicekt(@Named("codigoQR") String codigoQR) {
 
-        return entradaLogic.getTicekt(codigoQR);
+    /**
+     * Name: findTicekt Description: Delegado que crea un nuevo administrador en
+     * el sistema Method: GET
+     *
+     * @param codigoQR
+     * @return
+     */
+    public Entrada findTicekt(@Named("codigoQR") String codigoQR) {
+        return entradaLogic.findTicekt(codigoQR);
     }
+
+    /**
+     * Name: createTicket Description: Delegado que crea un nuevo ticket en el
+     * sistema Method: POST
+     *
+     * @param idAsistenteEvento
+     * @return Entrada creada
+     * @throws Exception
+     */
+    public Entrada createTicket(@Named("Idasistente") Integer idAsistenteEvento) throws Exception {
+        return entradaLogic.createTicket(idAsistenteEvento);
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------DISCOTECA---------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    /**
+     * Name: getDiscos Description: Delegado que consulta todas las discotecas
+     * en el sistema Method: Get
+     *
+     * @return Lista de discotecas en el sistema
+     */
+    public List<Discoteca> getDiscos() {
+        return discotecaLogic.getDiscos();
+    }
+
+    /**
+     * Name: findDisco Description: Delegado que consulta una discoteca en el
+     * sistema con su nombre Method: GET
+     *
+     * @param nombre
+     * @return Discoteca encontrada
+     */
+    public Discoteca findDisco(@Named("nombre") String nombre) {
+        return discotecaLogic.findDisco(nombre);
+    }
+
+    /**
+     * Name: createDisco Description: Delegado que crea una nueva discoteca en
+     * el sistema Method: POST
+     *
+     * @param nombre
+     * @return
+     * @throws Exception
+     */
+    public Discoteca createDisco(@Named("Nombre") String nombre) throws Exception {
+        return discotecaLogic.createDisco(nombre);
+    }
+
+    /**
+     * Name: editDisco Description: Delegado que edita una discoteca del sistema
+     * Method: PUT
+     *
+     * @param idDiscoteca
+     * @param nombre
+     * @return
+     * @throws Exception
+     */
+    public Discoteca editDisco(@Named("id") Integer idDiscoteca, @Named("nombre") String nombre) throws Exception {
+        return discotecaLogic.editDisco(idDiscoteca, nombre);
+    }
+
+    /**
+     * Name: deleteDisco Description: Delegado que elimina una discoteca del
+     * sistema Method: DELETE
+     *
+     * @param nombre
+     * @return
+     */
+    public Discoteca deleteDisco(@Named("nombre") String nombre) {
+        return discotecaLogic.deleteDisco(nombre);
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------EVENTO------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    /**
+     * Name: getDiscos Description: Delegado que consulta todas las discotecas
+     * en el sistema Method: Get
+     *
+     * @return Lista de discotecas en el sistema
+     */
+    public List<Evento> getEvents() {
+        return eventoLogica.getEvents();
+    }
+
+    /**
+     * Name: findEvento Description: Delegado que consulta un evento en el
+     * sistema con su nombre Method: GET
+     *
+     * @param idEvento
+     * @throws Exception
+     * @return Evento encontrado
+     */
+    public Evento findEvento(@Named("idEvento") Integer idEvento) throws Exception {
+        return eventoLogica.findEvent(idEvento);
+    }
+
+    /**
+     * Name: createEvent Description: Delegado que crea un evento en una
+     * discoteca del sistema Method: POST
+     *
+     * @param evento
+     * @param idDisc
+     * @param precioEvento
+     * @return
+     * @throws Exception
+     */
+    public Evento createEvent(Evento evento, @Named("idDisc")Integer idDisc,@Named("precioEvento") Integer precioEvento) throws Exception {
+        return eventoLogica.createEvent(evento,idDisc,precioEvento);
+    }
+
+    /**
+     * Name: editEvent Description: Delegado que edita un evento del sistema
+     * Method: PUT
+     *
+     * @param idEvento
+     * @param fechaInicio
+     * @param fechaFinal
+     * @param maxEntradas
+     * @param maxReservas
+     * @param nombre
+     * @param precio
+     * @return
+     * @throws Exception
+     */
+    public Evento editEvent(@Named("idEvento") Integer idEvento, @Named("fechaInicio") Date fechaInicio, @Named("fechaFinal") Date fechaFinal, @Named("maxEntradas") Integer maxEntradas, @Named("maxReservas") Integer maxReservas, @Named("nombre") String nombre, @Named("precio") Integer precio) throws Exception {
+        return eventoLogica.editEvent(idEvento, fechaInicio, fechaFinal, maxEntradas, maxReservas, nombre, precio);
+    }
+
+    /**
+     * Name: deleteEvento Description: Delegado que elimina un evento del
+     * sistema Method: DELETE
+     *
+     * @param idEvento
+     * @return
+     */
+    public Evento deleteEvento(@Named("idEvento") Integer idEvento) {
+        return eventoLogica.deleteEvent(idEvento);
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------ASISTENTE EVENTO--------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
+    
+    
+     /**
+     * Name: getAsistantsEvents Description: Delegado que consulta todos los asistente a un evento
+     * en el sistema Method: Get
+     *
+     * @return Lista de asistentes a cualquier evento en el sistema
+     */
+    public List<AsistenteEvento> getAsistantsEvents() {
+        return asistenteEventoLogic.getAssistantsEvents();
+    }
+
+    /**
+     * Name: createAssistantEvent Description: Delegado que crea un nuevo asistente
+     * en el sistema
+     *
+     * @param cedula
+     * @param idEvento
+     * @return
+     * @throws Exception
+     */
+    public AsistenteEvento createAssistantEvent(@Named("cedulaAsistente") String cedula, @Named("idEvento") Integer idEvento) throws Exception {
+
+        return asistenteEventoLogic.createAssistantEvent(cedula, idEvento);
+    }
+
+    
+
+    /**
+     * Name: deleteAssistantEvent Description: Delegado que elimina un asistente a un evento del
+     * sistema Method: DELETE
+     *
+     * @param idAsistenteEvento
+     * @return Asistente borrado del sistema
+     */
+    public AsistenteEvento deleteAssistantEvent(@Named("idAsistenteEvento") Integer idAsistenteEvento) {
+
+        return asistenteEventoLogic.deleteAssistantEvent(idAsistenteEvento);
+    }
+
+    /**
+     * Name: findAssistant Description: Delegado que busca un asistente del
+     * sistema Method: Put
+     *
+     * @param idAsistenteEvento
+     * @throws Exception
+     * @return Asistente encontrado del sistema
+     */
+    public AsistenteEvento findAssistantEvent(@Named("idAsistenteEvento") Integer idAsistenteEvento) throws Exception {
+        return asistenteEventoLogic.findAssistantEvent(idAsistenteEvento);
+    }
+
+    
 }

@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.0" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_0.xsd">
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_0.xsd">
   <persistence-unit name="unitEcho">
     <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
- 
-    <class>com.example.beans.Usuario</class>
     <class>com.example.beans.Entrada</class>
-    <class>com.example.beans.Rol</class>
     <class>com.example.beans.Reserva</class>
-    <class>com.example.beans.Configuracion</class>
-    <class>com.example.beans.Reporte</class>
-    <class>com.example.beans.TipoReporte</class>
+    <class>com.example.beans.Discoteca</class>
+    <class>com.example.beans.Asistente</class>
+    <class>com.example.beans.Evento</class>
+    <class>com.example.beans.AsistenteEvento</class>
+    <class>com.example.beans.Adminstrador</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
-        
-       <property name="datanucleus.identifier.case" value = "MixedCase"/>
-      <!-- LOCAL      
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/discotecas"/>
+      <property name="datanucleus.identifier.case" value="MixedCase"/>
+      <!-- LOCAL     --> 
+      
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/discotecasWebDB"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="password"/>-->
+      <property name="javax.persistence.jdbc.password" value="password"/>
+      
+      
       <!-- PRODUCCION    -->
-      <!-- Production -->
+      <!-- Production
       <property name="javax.persistence.jdbc.url" value="jdbc:google:mysql://disco-web:us-central1:disco-web-db/mydb"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.GoogleDriver"/>
-      <property name="javax.persistence.jdbc.password" value="password"/>
+      <property name="javax.persistence.jdbc.password" value="password"/> -->
     </properties>
   </persistence-unit>
 </persistence>

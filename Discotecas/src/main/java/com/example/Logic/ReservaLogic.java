@@ -5,13 +5,13 @@
  */
 package com.example.Logic;
 
-import com.example.beans.Reporte;
 import com.example.beans.Reserva;
-import com.example.beans.Usuario;
+import com.example.beans.AsistenteEvento;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -22,13 +22,13 @@ import javax.persistence.EntityManager;
 public class ReservaLogic {
 
     /**
-     * Name: getAllReservations Description: Endpoint que consulta todos las
+     * Name: getReservations Description: Endpoint que consulta todos las
      * reservaciones en el sistema Method: Get
      *
      * @return Lista de reservas en el sistema
      */
     @ApiMethod(name = "showReservations")
-    public List<Reserva> getAllReservations() {
+    public List<Reserva> getReservations() {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
@@ -41,29 +41,33 @@ public class ReservaLogic {
      * Name: createReservation Description: Endpoint que crea una reserva en el
      * sistema Method: Get
      *
-     * @param reserva
-     * @param cedula
+     * @param idAsistenteEvento
      * @return
      * @throws Exception
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "createReservation", path = "createReservation/success")
-    public Reserva createReservation(Reserva reserva, @Named("cedulaCliente") String cedula) throws Exception {
+    public Reserva createReservation(@Named("Id asistente") Integer idAsistenteEvento) throws Exception {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
-
         em.getTransaction().begin();
 
-        Usuario user = em.createNamedQuery("Usuario.findByCedula", Usuario.class).setParameter("cedula", cedula).getSingleResult();
-        Reserva tmp = new Reserva();
-        
-        tmp.setUsuarioidUsuario(user);
-        tmp.setIdReserva(generarNumeroConsecuenteReserva());
-        tmp.setFechaCaducidad(new Date(System.currentTimeMillis()));
-        Date dateToday = new Date(System.currentTimeMillis());
-        tmp.setEstado(new Short("0"));
-        tmp.setFechaReserva(dateToday);
-        em.persist(tmp);
+        AsistenteEvento eventAsisstant = em.createNamedQuery("AsistenteEvento.findByIdAsistenteEvento", AsistenteEvento.class).setParameter("idAsistenteEvento", idAsistenteEvento).getSingleResult();
+        Reserva reserva = new Reserva();
+        reserva.setEstado(new Short("0"));
+        reserva.setAsistenteEventoidAsistenteEvento(eventAsisstant);
+        reserva.setFechaReserva(new Date(System.currentTimeMillis()));
+        reserva.setIdReserva(generarNumeroConsecuenteReserva());
+        Date fechaCaducidad = (Date) eventAsisstant.getEventoidEvento().getFechaFinal();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 22);
+        cal.set(Calendar.MINUTE, 30);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        fechaCaducidad.setTime(cal.getTimeInMillis());
+        reserva.setFechaCaducidad(fechaCaducidad);
+
+        em.persist(reserva);
         em.getTransaction().commit();
-        return tmp;
+        return reserva;
     }
 
     /**
@@ -91,6 +95,7 @@ public class ReservaLogic {
      *
      * @param id
      * @return Reserva consultado del sistema
+     * @throws Exception      *
      */
     @ApiMethod(name = "consultarReserva", path = "consultarReserva")
     public Reserva findReservation(@Named("id") int id) throws Exception {

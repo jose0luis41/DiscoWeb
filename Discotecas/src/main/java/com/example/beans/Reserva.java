@@ -54,18 +54,15 @@ public class Reserva implements Serializable {
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaReserva;
-    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", nullable = false)
+    @JoinColumn(name = "AsistenteEvento_idAsistenteEvento", referencedColumnName = "idAsistenteEvento", nullable = false)
     @ManyToOne(optional = false)
-    private Usuario usuarioidUsuario;
+    private AsistenteEvento asistenteEventoidAsistenteEvento;
 
     public Reserva() {
     }
 
-    public Reserva(Usuario user, Integer idReserva, Date fecha) {
-        this.usuarioidUsuario = user;
+    public Reserva(Integer idReserva) {
         this.idReserva = idReserva;
-        this.fechaReserva = fecha;
-
     }
 
     public Reserva(Integer idReserva, Date fechaCaducidad, short estado, Date fechaReserva) {
@@ -107,12 +104,12 @@ public class Reserva implements Serializable {
         this.fechaReserva = fechaReserva;
     }
 
-    public Usuario getUsuarioidUsuario() {
-        return usuarioidUsuario;
+    public AsistenteEvento getAsistenteEventoidAsistenteEvento() {
+        return asistenteEventoidAsistenteEvento;
     }
 
-    public void setUsuarioidUsuario(Usuario usuarioidUsuario) {
-        this.usuarioidUsuario = usuarioidUsuario;
+    public void setAsistenteEventoidAsistenteEvento(AsistenteEvento asistenteEventoidAsistenteEvento) {
+        this.asistenteEventoidAsistenteEvento = asistenteEventoidAsistenteEvento;
     }
 
     @Override
@@ -139,5 +136,5 @@ public class Reserva implements Serializable {
     public String toString() {
         return "com.example.beans.Reserva[ idReserva=" + idReserva + " ]";
     }
-
+    
 }

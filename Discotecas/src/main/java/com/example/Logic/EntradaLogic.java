@@ -6,13 +6,11 @@
 package com.example.Logic;
 
 import com.example.beans.Entrada;
-import com.example.beans.Usuario;
+import com.example.beans.AsistenteEvento;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
-import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import com.sendgrid.*;
@@ -24,13 +22,13 @@ import com.sendgrid.*;
 public class EntradaLogic {
 
     /**
-     * Name: getAllReports Description: Endpoint que consulta todos los reportes
+     * Name: getTicekts Description: Endpoint que consulta todas las entradas
      * en el sistema Method: Get
      *
-     * @return Lista de reportes en el sistema
+     * @return Lista de entradas en el sistema
      */
-    @ApiMethod(name = "showReports")
-    public List<Entrada> getAllTicekts() {
+    @ApiMethod(name = "showTickets")
+    public List<Entrada> getTicekts() {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
@@ -39,10 +37,16 @@ public class EntradaLogic {
         return tickets;
     }
     
-     @ApiMethod(name = "showTicket")
-    public Entrada getTicekt(@Named("codigoQR") String codigoQR) {
+    /**
+     * Name: findTicekt Description: Endpoint que consulta una entrada
+     * en el sistema Method: Get
+     * @param codigoQR
+     * @return Entrada encontrada
+     */
+    
+     @ApiMethod(name = "findTicket")
+    public Entrada findTicekt(@Named("codigoQR") String codigoQR) {
 
-         System.out.println("com.example.Logic.EntradaLogic.getTicekt()    espaaaaaaa");
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
         Entrada ticket = em.createNamedQuery("Entrada.findByCodigoQR", Entrada.class).setParameter("codigoQR",codigoQR).getSingleResult();
@@ -54,47 +58,37 @@ public class EntradaLogic {
      * Name: createTicket Description: Endpoint que crea una nueva entrada en el
      * sistema Method: Post
      *
-     * @param reporte
-     * @param cedulaUsu
-     * @return reporte nuevo en el sistema
-     * @throws Exception cuando la cedula o el correo ya existan
+     * @param idAsistenteEvento
+     * @return Entrada nueva en el sistema
+     * @throws Exception cuando el id del asistente a un evento no exista
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "createTicket", path = "createTicket/success")
-    public Entrada createTicket(@Named("cedula") String cedulaUsu) throws Exception {
+    public Entrada createTicket(@Named("Idasistente") Integer idAsistenteEvento) throws Exception {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
         em.getTransaction().begin();
-        System.out.println("com.example.Logic.EntradaLogic.createTicket()     paso1");
-        Usuario user = em.createNamedQuery("Usuario.findByCedula", Usuario.class).setParameter("cedula", cedulaUsu).getSingleResult();
-        System.out.println("com.example.Logic.EntradaLogic.createTicket()     paso2");
+        AsistenteEvento eventAsisstant = em.createNamedQuery("AsistenteEvento.findByIdAsistenteEvento", AsistenteEvento.class).setParameter("idAsistenteEvento", idAsistenteEvento).getSingleResult();
 
-        BigDecimal precioActual = (BigDecimal) em.createQuery("SELECT con.precio FROM Configuracion con").getSingleResult();
-        System.out.println("com.example.Logic.EntradaLogic.createTicket()     paso3:  " + precioActual);
 
         Date dateToday = new Date(System.currentTimeMillis());
-        Calendar cal = Calendar.getInstance();
-        int dayActual = cal.get(Calendar.DATE);
 
-        Date dateFinish = new Date(System.currentTimeMillis());
-
-        cal.set(Calendar.HOUR_OF_DAY, 06);
-        cal.set(Calendar.MINUTE, 00);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.set(Calendar.DATE, dayActual + 1);
-        dateFinish.setTime(cal.getTimeInMillis());
-        int id = generarNumeroConsecuenteEntrada();
-        Entrada ticket = new Entrada(id, user, precioActual, dateToday, dateFinish, "Entrada " + id + "-" + user.getCedula());
+        
+        Entrada ticket = new Entrada();
+        ticket.setFechaCompra(dateToday);
+        ticket.setAsistenteEventoidAsistenteEvento(eventAsisstant);
+        ticket.setIdEntrada(generarNumeroConsecuenteEntrada());
+        ticket.setCodigoQR(ticket.getIdEntrada()+""+ticket.getAsistenteEventoidAsistenteEvento().getIdAsistenteEvento());
         
         em.persist(ticket);
-        System.out.println("com.example.Logic.EntradaLogic.createTicket():    Antes de enviar el correo");
-        envioDeEntradasPorCorreo(user, ticket.getCodigoQR());
+        //envioDeEntradasPorCorreo(user, ticket.getCodigoQR());
 
         em.getTransaction().commit();
         return ticket;
     }
-
+    
+    //TODO arreglar en envio de entradas
+/*
     private void envioDeEntradasPorCorreo(Usuario usuario,String htmlQR) throws Exception{
         System.out.println("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo():     Entra al método");
        
@@ -114,7 +108,7 @@ public class EntradaLogic {
         System.out.println("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo()    "+email.getTos()[0]);
         System.out.println("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo()   "+ response.getMessage());
     }
-
+*/
     private int generarNumeroConsecuenteEntrada() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
@@ -127,7 +121,6 @@ public class EntradaLogic {
 
         }
 
-        System.out.println("com.example.Logic.EntradaLogic.generarNumeroConsecuenteEntrada()" + cantidad);
         em.getTransaction().commit();
         return cantidad;
     }

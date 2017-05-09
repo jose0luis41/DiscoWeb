@@ -6,7 +6,6 @@
 package com.example.beans;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -31,9 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Entrada.findAll", query = "SELECT e FROM Entrada e")
     , @NamedQuery(name = "Entrada.findByIdEntrada", query = "SELECT e FROM Entrada e WHERE e.idEntrada = :idEntrada")
-    , @NamedQuery(name = "Entrada.findByPrecio", query = "SELECT e FROM Entrada e WHERE e.precio = :precio")
     , @NamedQuery(name = "Entrada.findByFechaCompra", query = "SELECT e FROM Entrada e WHERE e.fechaCompra = :fechaCompra")
-    , @NamedQuery(name = "Entrada.findByFechaVencimiento", query = "SELECT e FROM Entrada e WHERE e.fechaVencimiento = :fechaVencimiento")
     , @NamedQuery(name = "Entrada.findByCodigoQR", query = "SELECT e FROM Entrada e WHERE e.codigoQR = :codigoQR")})
 public class Entrada implements Serializable {
 
@@ -43,11 +40,6 @@ public class Entrada implements Serializable {
     @NotNull
     @Column(nullable = false)
     private Integer idEntrada;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal precio;
     @Basic(optional = false)
     @NotNull
     @Column(nullable = false)
@@ -55,17 +47,12 @@ public class Entrada implements Serializable {
     private Date fechaCompra;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fechaVencimiento;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 100)
     @Column(nullable = false, length = 100)
     private String codigoQR;
-    @JoinColumn(name = "Usuario_idUsuario", referencedColumnName = "idUsuario", nullable = false)
+    @JoinColumn(name = "AsistenteEvento_idAsistenteEvento", referencedColumnName = "idAsistenteEvento", nullable = false)
     @ManyToOne(optional = false)
-    private Usuario usuarioidUsuario;
+    private AsistenteEvento asistenteEventoidAsistenteEvento;
 
     public Entrada() {
     }
@@ -74,12 +61,9 @@ public class Entrada implements Serializable {
         this.idEntrada = idEntrada;
     }
 
-    public Entrada(Integer idEntrada, Usuario user,BigDecimal precio, Date fechaCompra, Date fechaVencimiento, String codigoQR) {
-        this.usuarioidUsuario = user;
+    public Entrada(Integer idEntrada, Date fechaCompra, String codigoQR) {
         this.idEntrada = idEntrada;
-        this.precio = precio;
         this.fechaCompra = fechaCompra;
-        this.fechaVencimiento = fechaVencimiento;
         this.codigoQR = codigoQR;
     }
 
@@ -91,28 +75,12 @@ public class Entrada implements Serializable {
         this.idEntrada = idEntrada;
     }
 
-    public BigDecimal getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
-    }
-
     public Date getFechaCompra() {
         return fechaCompra;
     }
 
     public void setFechaCompra(Date fechaCompra) {
         this.fechaCompra = fechaCompra;
-    }
-
-    public Date getFechaVencimiento() {
-        return fechaVencimiento;
-    }
-
-    public void setFechaVencimiento(Date fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
     }
 
     public String getCodigoQR() {
@@ -123,12 +91,12 @@ public class Entrada implements Serializable {
         this.codigoQR = codigoQR;
     }
 
-    public Usuario getUsuarioidUsuario() {
-        return usuarioidUsuario;
+    public AsistenteEvento getAsistenteEventoidAsistenteEvento() {
+        return asistenteEventoidAsistenteEvento;
     }
 
-    public void setUsuarioidUsuario(Usuario usuarioidUsuario) {
-        this.usuarioidUsuario = usuarioidUsuario;
+    public void setAsistenteEventoidAsistenteEvento(AsistenteEvento asistenteEventoidAsistenteEvento) {
+        this.asistenteEventoidAsistenteEvento = asistenteEventoidAsistenteEvento;
     }
 
     @Override
