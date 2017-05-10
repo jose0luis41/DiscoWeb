@@ -1,0 +1,54 @@
+<html>
+<head>
+<title> Login</title>
+<!-- Include CSS File Here -->
+<link rel="stylesheet" href="styles.css"/>
+<!-- Include JS File Here -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body background="">
+
+
+<div class="containerAdministrador">
+<div class="mainAdministator">
+<h2>Administrator Login </h2>
+<form id="form_id_Administrator" method="post" name="myformAdministrator">
+<label>Correo :</label>
+<input type="text" name="username" id="usernameAdministrator"/>
+<label>Password :</label>
+<input type="password" name="password" id="passwordAdministrator"/>
+<input type="button" value="Login" id="submitAdministrator" onclick="validar()"/>
+</form>
+<span><b class="note">Nota : </b>Solo puedes ingresar aquí si eres adminitrador. <br/></span>
+<span><b class="note">No tienes cuenta? 
+</b>    Registrate como Administrador. <br/></span>
+<input type="button" value="Registrarse" id="submit" onclick="validar()"/>
+
+</div>
+</div>
+
+
+<div class="containerAsistente">
+<div class="mainAssistant">
+<h2>Assistant Login </h2>
+<form id="form_id" method="post" name="myform">
+<label>Correo :</label>
+<input type="text" name="username" id="username"/>
+<label>Password :</label>
+<input type="password" name="password" id="password"/>
+<input type="button" value="Login" id="submit" onclick="validar()"/>
+</form>
+<span><b class="note">Nota : </b>Solo puedes ingresar aquí si eres cliente. <br/></span>
+
+<span><b class="note">No tienes cuenta? 
+</b>    Registrate aquí. <br/></span>
+<input type="button" value="Registrarse" id="submit" onclick="validar()"/>
+
+</div>
+</div>
+
+
+<script src="javaScript.js"></script>
+
+</body>
+</html>
