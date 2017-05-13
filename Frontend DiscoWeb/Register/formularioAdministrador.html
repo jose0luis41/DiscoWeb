@@ -1,6 +1,6 @@
 <html>
 <head>
-<title> Login</title>
+<title> Formulario de Registro</title>
 <!-- Include CSS File Here -->
 <link rel="stylesheet" href="/css/styles.css"/>
 <!-- Include JS File Here -->
@@ -14,6 +14,9 @@
 <h2>Formulario de registro como administrador </h2>
 <form id="form_id" method="post" name="myform">
 
+<label>Id Discoteca :</label>
+<input type="text" name="idDiscoteca" id="idDiscoteca"/>
+
 <label>Nombre :</label>
 <input type="text" name="nombreRegistroAdmin" id="nombreRegistroAdmin"/>
 
@@ -24,7 +27,7 @@
 <input type="text" name="celularRegistroAdmin" id="celularRegistroAdmin"/>
 
 <label>Fecha de Nacimiento :</label>
-<input type="date" id ="fechaNaciRegistroAdmin "name="bday" min="1940-01-01"><br><br>
+<input type="date" id ="fechaNaciRegistroAdmin"name="bday" min="1940-01-01"><br><br>
 
 <label>Correo :</label>
 <input type="text" name="correoRegistroAdmin" id="correoRegistroAdmin"/>
@@ -35,12 +38,14 @@
 <label>Confirm password :</label>
 <input type="password" name="passwordConfirmRegistroAdmin" id="passwordConfirmRegistroAdmin"/>
 
-<input type="button" value="Enviar" id="submit" onclick="validar()"/>
+<input type="button" value="Enviar" id="submit" onclick="crearAdministrador()"/>
 
 </form>
 
 
 <script src="register.js"></script>
+ <script src="https://apis.google.com/js/client.js?onload=initRegistroUsuarios"></script>
+
 
 </body>
 </html>

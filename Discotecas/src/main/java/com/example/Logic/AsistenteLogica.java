@@ -189,6 +189,7 @@ public class AsistenteLogica {
         em.getTransaction().commit();
         return asistente;
     }
+    
 
     private int generarNumeroConsecuenteAsistente() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();

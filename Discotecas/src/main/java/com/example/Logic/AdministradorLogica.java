@@ -53,7 +53,7 @@ public class AdministradorLogica {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
         em.getTransaction().begin();
-
+        System.out.println("com.example.Logic.AdministradorLogica.createAdministrator():    "+adminstrador.getFechaNac());
         if (adminstrador == null) {
             throw new Exception("El administrador es null");
         } else if (adminstrador.getCedula() == null || adminstrador.getCedula().equalsIgnoreCase("")) {
@@ -63,7 +63,7 @@ public class AdministradorLogica {
         } else if (adminstrador.getCorreo() == null || adminstrador.getCorreo().equalsIgnoreCase("")) {
             throw new Exception("El correo es null");
         } else if (adminstrador.getFechaNac() == null) {
-            throw new Exception("La cedula es null");
+            throw new Exception("La fecha es null");
         } else if (adminstrador.getNombre() == null || adminstrador.getNombre().equalsIgnoreCase("")) {
             throw new Exception("El nombre es null");
         } else if (adminstrador.getTelefono() == null || adminstrador.getTelefono().equalsIgnoreCase("")) {
@@ -72,9 +72,7 @@ public class AdministradorLogica {
             throw new Exception("El id de la discoteca es null");
         }
 
-        System.out.println("com.example.Logic.AdministradorLogica.createAdministrator()   ANTES DE LA CONSULTA DISCOTECAS");
         Discoteca discoteca = em.createNamedQuery("Discoteca.findByIdDiscoteca", Discoteca.class).setParameter("idDiscoteca", idDiscoteca).getSingleResult();
-        System.out.println("com.example.Logic.AdministradorLogica.createAdministrator()   DESPUES DE LA CONSULTA DISCOTECAS");
 
         adminstrador.setDiscotecaidDiscoteca(discoteca);
         adminstrador.setIdAdministrador(generarNumeroConsecuenteAdministrador());

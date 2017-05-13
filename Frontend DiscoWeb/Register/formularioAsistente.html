@@ -1,6 +1,6 @@
 <html>
 <head>
-<title> Login</title>
+<title> Forumlario registro Assistant</title>
 <!-- CSS File  -->
 <link rel="stylesheet" href="/css/styles.css"/>
 <!-- JS files -->
@@ -16,31 +16,33 @@
 <form id="form_id" method="post" name="myform">
 
 <label>Nombre :</label>
-<input type="text" name="nombreRegistro" id="nombreRegistro"/>
+<input type="text" name="nombreRegistro" id="nombreRegistroAsistente"/>
 
 <label>Cedula :</label>
-<input type="text" name="cedulaRegistro" id="cedulaRegistro"/>
+<input type="text" name="cedulaRegistro" id="cedulaRegistroAsistente"/>
 
 <label>Celular :</label>
-<input type="text" name="celularRegistro" id="celularRegistro"/>
+<input type="text" name="celularRegistro" id="celularRegistroAsistente"/>
 
 <label>Fecha de Nacimiento :</label>
-<input type="date" id ="fechaNaciRegistro "name="bday" min="1940-01-01"><br><br>
+<input type="date" id ="fechaNaciRegistroAsistente"name="bday" min="1940-01-01"><br><br>
 
 <label>Correo :</label>
-<input type="text" name="correoRegistro" id="correoRegistro"/>
+<input type="text" name="correoRegistro" id="correoRegistroAsistente"/>
 
 <label>Password :</label>
-<input type="password" name="passwordRegistro" id="passwordRegistro"/>
+<input type="password" name="passwordRegistro" id="passwordRegistroAsistente"/>
 
 <label>Confirm password :</label>
-<input type="password" name="password" id="password"/>
+<input type="password" name="password" id="passwordConfirmAsistente"/>
 
-<input type="button" value="Enviar" id="submit" onclick="setCreateTable()"/>
+<input type="button" value="Enviar" id="submit" onclick="crearAsistente()"/>
 
 </form>
 
  <script src="register.js"></script>
+ <script src="https://apis.google.com/js/client.js?onload=initRegistroUsuarios"></script>
+
 
 
 </body>
