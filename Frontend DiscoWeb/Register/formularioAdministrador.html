@@ -1,0 +1,46 @@
+<html>
+<head>
+<title> Login</title>
+<!-- Include CSS File Here -->
+<link rel="stylesheet" href="/css/styles.css"/>
+<!-- Include JS File Here -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body background="">
+
+
+<div class="containerRegistro">
+<div class="mainARegistro">
+<h2>Formulario de registro como administrador </h2>
+<form id="form_id" method="post" name="myform">
+
+<label>Nombre :</label>
+<input type="text" name="nombreRegistroAdmin" id="nombreRegistroAdmin"/>
+
+<label>Cedula :</label>
+<input type="text" name="cedulaRegistroAdmin" id="cedulaRegistroAdmin"/>
+
+<label>Celular :</label>
+<input type="text" name="celularRegistroAdmin" id="celularRegistroAdmin"/>
+
+<label>Fecha de Nacimiento :</label>
+<input type="date" id ="fechaNaciRegistroAdmin "name="bday" min="1940-01-01"><br><br>
+
+<label>Correo :</label>
+<input type="text" name="correoRegistroAdmin" id="correoRegistroAdmin"/>
+
+<label>Password :</label>
+<input type="password" name="passwordRegistroAdmin" id="passwordRegistroAdmin"/>
+
+<label>Confirm password :</label>
+<input type="password" name="passwordConfirmRegistroAdmin" id="passwordConfirmRegistroAdmin"/>
+
+<input type="button" value="Enviar" id="submit" onclick="validar()"/>
+
+</form>
+
+
+<script src="register.js"></script>
+
+</body>
+</html>

@@ -19,7 +19,7 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
     
-    <servlet>
+   <!-- <servlet>
         <servlet-name>PagoDisco</servlet-name>
         <servlet-class>com.example.echo.PagoDisco</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -28,7 +28,7 @@
     <servlet-mapping>
         <servlet-name>PagoDisco</servlet-name>
         <url-pattern>/PagoDisco</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
     
      <filter>
         <filter-name>cors</filter-name>

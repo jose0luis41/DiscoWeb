@@ -22,7 +22,6 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.Named;
 import java.util.Date;
 import com.example.beans.*;
-import java.math.BigDecimal;
 
 /**
  * The Echo API which Endpoints will be exposing.
@@ -130,13 +129,23 @@ public class Echo {
 
     /**
      * Name: findAssistant Description: Delegado que busca un asistente del
-     * sistema Method: Put
+     * sistema 
      *
      * @param cedula
      * @return Asistente encontrado del sistema
      */
     public Asistente findAssistant(@Named("cedula") String cedula) throws Exception {
         return assistantLogic.findAssistant(cedula);
+    }
+
+    /**
+     * Name: getLoginAsistente Description: Delegado que busca un asistente del sistema por el correo
+     * @param correo
+     * @return
+     * @throws Exception 
+     */
+    public Asistente getLoginAsistente(@Named("correo") String correo) throws Exception {
+        return assistantLogic.getLoginAsistente(correo);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -166,7 +175,7 @@ public class Echo {
      * @throws Exception
      */
     public Adminstrador createAdministrator(Adminstrador adminstrador, @Named("idDiscoteca") Integer idDiscoteca) throws Exception {
-        return administratorLogic.createAdministrator(adminstrador,idDiscoteca);
+        return administratorLogic.createAdministrator(adminstrador, idDiscoteca);
     }
 
     /**
@@ -206,6 +215,10 @@ public class Echo {
      */
     public Adminstrador findAdministrator(@Named("cedula") String cedula) throws Exception {
         return administratorLogic.findAdministrator(cedula);
+    }
+
+    public Adminstrador getLoginAdministrator(@Named("correo") String correo) throws Exception {
+        return administratorLogic.getLoginAdministrator(correo);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -351,8 +364,8 @@ public class Echo {
      * @return
      * @throws Exception
      */
-    public Evento createEvent(Evento evento, @Named("idDisc")Integer idDisc,@Named("precioEvento") Integer precioEvento) throws Exception {
-        return eventoLogica.createEvent(evento,idDisc,precioEvento);
+    public Evento createEvent(Evento evento, @Named("idDisc") Integer idDisc, @Named("precioEvento") Integer precioEvento) throws Exception {
+        return eventoLogica.createEvent(evento, idDisc, precioEvento);
     }
 
     /**
@@ -391,11 +404,9 @@ public class Echo {
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
-    
-    
-     /**
-     * Name: getAsistantsEvents Description: Delegado que consulta todos los asistente a un evento
-     * en el sistema Method: Get
+    /**
+     * Name: getAsistantsEvents Description: Delegado que consulta todos los
+     * asistente a un evento en el sistema Method: Get
      *
      * @return Lista de asistentes a cualquier evento en el sistema
      */
@@ -404,8 +415,8 @@ public class Echo {
     }
 
     /**
-     * Name: createAssistantEvent Description: Delegado que crea un nuevo asistente
-     * en el sistema
+     * Name: createAssistantEvent Description: Delegado que crea un nuevo
+     * asistente en el sistema
      *
      * @param cedula
      * @param idEvento
@@ -417,11 +428,9 @@ public class Echo {
         return asistenteEventoLogic.createAssistantEvent(cedula, idEvento);
     }
 
-    
-
     /**
-     * Name: deleteAssistantEvent Description: Delegado que elimina un asistente a un evento del
-     * sistema Method: DELETE
+     * Name: deleteAssistantEvent Description: Delegado que elimina un asistente
+     * a un evento del sistema Method: DELETE
      *
      * @param idAsistenteEvento
      * @return Asistente borrado del sistema
@@ -443,5 +452,4 @@ public class Echo {
         return asistenteEventoLogic.findAssistantEvent(idAsistenteEvento);
     }
 
-    
 }

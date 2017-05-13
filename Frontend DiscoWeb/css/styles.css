@@ -1,5 +1,19 @@
 @import url(http://fonts.googleapis.com/css?family=Raleway);
 
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+th, td {
+    border: none;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
 
 
 h2{
@@ -16,9 +30,11 @@ border-top: 1px solid #ccc;
 margin-bottom: 40px;
 }
 
-div.mainAssistantRegistro{
-width: 800px;
-height: 700px;
+
+
+div.mainRegistro{
+width: 600px;
+height: 750px;
 padding: 10px 50px 25px;
 border: 2px solid gray;
 border-radius: 10px;
@@ -26,7 +42,21 @@ font-family: raleway;
 float:left;
 margin-top:50px;
 }
-
+div.containerRegistro{
+width: 400px;
+height: 610px;
+font-family: 'Raleway', sans-serif;
+position: absolute;
+margin: auto;
+top: 50px;
+right: 50px;
+bottom: 50px;
+left: 50px;
+margin-top: 50px;
+margin-right: 50px;
+margin-left: 50px;
+margin-bottom: 50px;
+}
 div.containerAdministrador{
 height: 610px;
 font-family: 'Raleway', sans-serif;
@@ -52,7 +82,7 @@ margin-top:50px;
 }
 
 div.mainAssistant{
-width: 800px;
+width: 400px;
 padding: 10px 50px 25px;
 border: 2px solid gray;
 border-radius: 10px;

@@ -9,9 +9,11 @@ import com.example.beans.*;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
+import com.google.api.server.spi.response.BadRequestException;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -160,6 +162,32 @@ public class AsistenteLogica {
         em.getTransaction().commit();
 
         return assistantFound;
+    }
+
+    /**
+     * Name: getLoginAdministrator Description: Endpoint que consulta un
+     * asistente en el sistema Method: Get
+     *
+     * @param correo
+     * @throws Exception
+     * @return Asistente encontrado
+     */
+    @ApiMethod(name = "loginAssistant")
+    public Asistente getLoginAsistente(@Named("correo") String correo) throws Exception {
+
+        if (correo == null || correo.equalsIgnoreCase("")) {
+            throw new BadRequestException("No se ha escrito correos");
+
+        }
+
+        EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
+        em.getTransaction().begin();
+        Asistente asistente = em.createNamedQuery("Asistente.findByCorreo", Asistente.class).setParameter("correo", correo).getSingleResult();
+        if (asistente == null) {
+            throw new NoResultException("No existe el administrador con correo " + correo);
+        }
+        em.getTransaction().commit();
+        return asistente;
     }
 
     private int generarNumeroConsecuenteAsistente() {

@@ -10,9 +10,11 @@ import com.example.beans.Discoteca;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
+import com.google.api.server.spi.response.BadRequestException;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -169,6 +171,31 @@ public class AdministradorLogica {
         em.getTransaction().commit();
 
         return administratorFound;
+    }
+    
+     /**
+     * Name: loginAdministrator Description: Endpoint que consulta un
+     * adminsitrador en el sistema Method: Get
+     *
+     * @param correo
+     * @return Administrador encontrado
+     */
+    @ApiMethod(name = "loginAdministrators")
+    public Adminstrador getLoginAdministrator(@Named("correo") String correo) throws Exception {
+
+        if (correo == null || correo.equalsIgnoreCase("")) {
+            throw new BadRequestException("No se ha escrito correos");
+
+        }
+
+        EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
+        em.getTransaction().begin();
+        Adminstrador adminstrador = em.createNamedQuery("Adminstrador.findByCorreo", Adminstrador.class).setParameter("correo", correo).getSingleResult();
+        if (adminstrador == null) {
+            throw new NoResultException("No existe el administrador con correo " + correo);
+        }
+        em.getTransaction().commit();
+        return adminstrador;
     }
 
     private int generarNumeroConsecuenteAdministrador() {

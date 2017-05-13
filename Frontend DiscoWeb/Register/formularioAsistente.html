@@ -1,0 +1,47 @@
+<html>
+<head>
+<title> Login</title>
+<!-- CSS File  -->
+<link rel="stylesheet" href="/css/styles.css"/>
+<!-- JS files -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+<body background="">
+
+
+<div class="containerRegistro">
+<div class="mainARegistro">
+<h2>Formulario de registro como cliente </h2>
+<form id="form_id" method="post" name="myform">
+
+<label>Nombre :</label>
+<input type="text" name="nombreRegistro" id="nombreRegistro"/>
+
+<label>Cedula :</label>
+<input type="text" name="cedulaRegistro" id="cedulaRegistro"/>
+
+<label>Celular :</label>
+<input type="text" name="celularRegistro" id="celularRegistro"/>
+
+<label>Fecha de Nacimiento :</label>
+<input type="date" id ="fechaNaciRegistro "name="bday" min="1940-01-01"><br><br>
+
+<label>Correo :</label>
+<input type="text" name="correoRegistro" id="correoRegistro"/>
+
+<label>Password :</label>
+<input type="password" name="passwordRegistro" id="passwordRegistro"/>
+
+<label>Confirm password :</label>
+<input type="password" name="password" id="password"/>
+
+<input type="button" value="Enviar" id="submit" onclick="setCreateTable()"/>
+
+</form>
+
+ <script src="register.js"></script>
+
+
+</body>
+</html>
