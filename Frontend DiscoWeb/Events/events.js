@@ -13,6 +13,8 @@
 }
 
 listarEventos = function() {
+   var emailStoraged = localStorage.getItem('usuario'); 
+   document.title = emailStoraged;
   gapi.client.echo.echo.getEvents().execute(
       function(resp) {
         
@@ -62,6 +64,11 @@ table.onclick = function getIdEventSelected(e) {
             data.push(cells[i].innerHTML);
         }
     }
+
+    localStorage.setItem('idDiscoteca',data[0]);
+    var prueba = localStorage.getItem('idDiscoteca');
+    console.log(prueba);
+
     console.log(""+data[0]);
     return data[0]; 
 

@@ -22,6 +22,11 @@ var password = document.getElementById("passwordAdministrator").value;
 
             if( !resp.error && resp!==false){
             	if(resp.contrasena === password){
+
+                    var user = resp;
+
+                    localStorage.setItem('user',user);
+
                     setAdministratorCount();
             	}else{
             		  alert("Contrasena incorrecta");
@@ -49,6 +54,7 @@ var password = document.getElementById("passwordAssistant").value;
 
             if( !resp.error && resp!==false){
                 if(resp.contrasena === password){
+                    localStorage.setItem('usuario',username);
                     setAssistantCount();
                 }else{
                       alert("Contrasena incorrecta");
@@ -67,13 +73,13 @@ var password = document.getElementById("passwordAssistant").value;
 }
 
 
+
 function setAdministratorCount(){
  window.location = "/Administrator/administratorView.html";
-
 }
 
 function setAssistantCount(){
-    window.location = "/Assistant/assistantView.html"
+    window.location = "/Assistant/assistantView.html";
 }
 
 function setCreateTable(){
@@ -83,21 +89,6 @@ function setCreateTable(){
 function setIndexPage(){
     window.location="index.html"
 }
-
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
 
 
 
