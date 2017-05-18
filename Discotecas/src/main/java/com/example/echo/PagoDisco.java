@@ -38,13 +38,13 @@ public class PagoDisco extends HttpServlet {
 
         int transactionState = Integer.parseInt(req.getParameter("transactionState"));
 
-        String mensajeRespuesta = "";
+        String mensajeRespuesta = "Señor(a):" + req.getParameter("buyerFullName") + "<br>" + "El estado de su transacción es" + "<br>";
 
         switch (transactionState) {
             case 4:
-                mensajeRespuesta = "Transacción exitosa <br>" + "Fecha de la transacción:  " + req.getParameter("processingDate") + "<br>"
-                        + "Por el monto: " + Double.parseDouble(req.getParameter("TX_VALUE"))+ "  " + req.getParameter("currency") + "<br>" + "La referencia es:  "
-                        + Double.parseDouble(req.getParameter("referenceCode"));
+                mensajeRespuesta = mensajeRespuesta + "EXITOSO <br>" + "Fecha de la transacción:  " + req.getParameter("processingDate") + "<br>"
+                        + "Por el monto: " + Double.parseDouble(req.getParameter("TX_VALUE")) + "  " + req.getParameter("currency") + "<br>" + "La referencia es:  "
+                        + req.getParameter("referenceCode");
                 break;
             case 7:
                 mensajeRespuesta = "pending ...";
@@ -58,8 +58,8 @@ public class PagoDisco extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
         out.println("<html>");
-        out.println("<body>");
-        out.println("<t1>" + mensajeRespuesta + "</t1>");
+        out.println("<body style=\"background-color:#F0E68C;\">");
+        out.println("<h1>" + mensajeRespuesta + "</h1>");
         out.println("</body>");
         out.println("</html>");
         out.println();
@@ -75,6 +75,9 @@ public class PagoDisco extends HttpServlet {
 
         if (state_pol == 4) {
 
+            
+            
+            
         } else if (state_pol == 5) {
 
         } else if (state_pol == 6) {

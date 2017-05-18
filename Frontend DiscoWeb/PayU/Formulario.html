@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Pay Ticket</title>
+    </head>
+    <body style="background-color:#F0E68C;">
+
+        <div>  
+            <h1  style="text-align:center;">PAGOS DE TICKETS</h1>
+            <p style="color:MidnightBlue ; text-align:center; font-size:20px"> Ingrese los datos mínimos en el formulario para poder realizar el pago del Ticket</p>
+        </div>   
+
+        <div> 
+            <form method="post" action="https://sandbox.gateway.payulatam.com/ppp-web-gateway/">
+                <input name="merchantId"    type="hidden"  value="508029"   >
+                <input name="accountId"     type="hidden"  value="512321" >
+                <input name="description"   type="hidden"  value="Entrada para el evento"  >
+                <input name="referenceCode" type="hidden" id ="rc" value="" >
+                <input name="amount"        type="hidden"  value="10000"   >
+                <input name="tax"           type="hidden"  value="0"  >
+                <input name="taxReturnBase" type="hidden"  value="0" >
+                <input name="currency"      type="hidden"  value="COP" >
+                <input name="signature"     type="hidden" id="sig" value=""  >
+                <input name="test"          type="hidden"  value="1" >
+                <input name="buyerEmail"    type="hidden"  value="diland.t95@hotmail.com" >
+                <input name="responseUrl"    type="hidden"  value="http://localhost:8080/PagoDisco" >
+                <input name="confirmationUrl"    type="hidden"  value="http://localhost:8080/PagoDisco" >
+
+
+                <label id="labCedula" style="font-size:20px">Cédula:   </label><br>
+                <input style="text-align:center; font-size:15px" type="text" name="cedula" value = "1151957413"><br>
+                <br>
+                <label style="vertical-align: middle; font-size:20px">Nombre comprador:   </label><br>
+                <input style="text-align:center; font-size:15px" type="text" name="buyerFullName" value = "Dylan Torres "><br>
+                <br>
+                <label style=" vertical-align: middle; font-size:20px">Teléfono:   </label><br>
+                <input style="text-align:center; font-size:15px" type="text" name="telephone" value = "3053088359"><br>
+                <br>
+                <input style="width:200px" onclick="referenceCodeResult" name="Submit"  type="submit"  value="Enviar formulario" >
+            </form>
+        </div>
+
+        <script language="JavaScript" src="md5.js"></script>
+
+        <script>
+
+                    function generarReferenciaAEntrada(num) {
+
+                        var valores = "ABCDEFGHIJKLMNPQRTUVWXYZ012346789";
+                        var reference = "";
+                        for (i = 0; i < num; i++)
+                            reference += valores.charAt(Math.floor(Math.random() * valores.length));
+                        document.getElementById("rc").value = reference;
+                        return reference;
+
+                    }
+                    var referenceCodeResult = generarReferenciaAEntrada(8);
+                    var firma = "4Vj8eK4rloUd272L48hsrarnUA~508029~" + referenceCodeResult + "~10000~COP";
+                    var signature = calcMD5(firma);
+
+                    document.getElementById("sig").value = signature;
+
+        </script>
+
+    </body>
+</html>
