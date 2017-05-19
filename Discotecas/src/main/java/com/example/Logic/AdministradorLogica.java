@@ -5,12 +5,15 @@
  */
 package com.example.Logic;
 
+import com.auth0.jwt.JWT;
 import com.example.beans.Adminstrador;
 import com.example.beans.Discoteca;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.BadRequestException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -179,7 +182,7 @@ public class AdministradorLogica {
      * @return Administrador encontrado
      */
     @ApiMethod(name = "loginAdministrators")
-    public Adminstrador getLoginAdministrator(@Named("correo") String correo) throws Exception {
+    public JWTE getLoginAdministrator(@Named("correo") String correo) throws Exception {
 
         if (correo == null || correo.equalsIgnoreCase("")) {
             throw new BadRequestException("No se ha escrito correos");
@@ -193,7 +196,21 @@ public class AdministradorLogica {
             throw new NoResultException("No existe el administrador con correo " + correo);
         }
         em.getTransaction().commit();
-        return adminstrador;
+        
+        LoginState lgState = LoginState.getInstance();
+        Date date = new Date();
+        String dt = date.getYear()+"-"+date.getMonth()+"-"+date.getDay();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        c.setTime(sdf.parse(dt));
+        c.add(Calendar.DATE, 1);
+        dt = sdf.format(c.getTime());
+        String jwtToken = JWT.create().withClaim("Id", adminstrador.getIdAdministrador()).withExpiresAt(c.getTime()).sign(Algorithm.HMAC256("QWHDIKSEUNSJHDE"));
+        
+        JWTE token = new com.example.Logic.JWTE(adminstrador.getIdAdministrador().toString(), jwtToken);
+        lgState.setToken(token);
+        
+        return token;
     }
 
     private int generarNumeroConsecuenteAdministrador() {
@@ -213,5 +230,32 @@ public class AdministradorLogica {
 
         em.getTransaction().commit();
         return cantidad;
+    }
+    
+    public static boolean verificarJWT(JWTE jwt){
+        EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
+        Adminstrador adminstrador = em.createNamedQuery("Adminstrador.findByIdAdministrador", Adminstrador.class).setParameter("idAdministrador", LoginState.getInstance().getToken().getId()).getSingleResult();
+        try{
+            
+            DecodedJWT dec = JWT.decode(LoginState.getInstance().getToken().getToken());
+            if(adminstrador != null){
+                if(jwt.getId().equals(adminstrador.getIdAdministrador())){
+                return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+            
+        }
+        catch(JWTDecodeException e){
+            e.printStackTrace();
+            return false;
+        }
+        
+        
     }
 }
