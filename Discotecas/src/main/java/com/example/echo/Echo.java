@@ -217,7 +217,7 @@ public class Echo {
         return administratorLogic.findAdministrator(cedula);
     }
 
-    public Adminstrador getLoginAdministrator(@Named("correo") String correo) throws Exception {
+    public JWTE getLoginAdministrator(@Named("correo") String correo) throws Exception {
         return administratorLogic.getLoginAdministrator(correo);
     }
 
