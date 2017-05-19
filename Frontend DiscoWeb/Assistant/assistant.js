@@ -9,6 +9,7 @@ function initWelcome() {
 
     var callback = function() {
     	getUserLogin();
+        getDiscos();
     }
     gapi.client.load('echo', 'v1', callback, ROOT_LOCAL);
 }
@@ -34,6 +35,53 @@ getUserLogin = function(){
     });
 
 }
+
+
+getDiscos= function(){
+
+     gapi.client.echo.echo.getDiscos().execute(
+      function(resp) {
+
+            if( !resp.error && resp!==false){
+                 var table = document.getElementById("tableDisco");
+                 var rowCount = table.rows.length;
+                 var row = table.insertRow(rowCount);
+
+                 var discos = resp;
+
+            for(var i = 0; i < discos.items.length; i++)
+            {
+               var cellId= row.insertCell(0); 
+                var cellNombre= row.insertCell(1); 
+               
+
+                cellId.innerHTML = discos.items[i].idDiscoteca;
+                cellNombre.innerHTML = discos.items[i].nombre;
+
+                row = table.insertRow(table.rows.length);
+
+            }
+
+
+            }else if(resp.code ===400){
+                    alert(resp.error);
+            }else{
+                alert("Error "+ resp.error);
+            } 
+    });
+
+}
+
+
+function nobackbutton(){
+
+   window.location.hash="no-back-button";
+
+   window.location.hash="Again-No-back-button" //chrome
+
+   window.onhashchange=function(){window.location.hash="no-back-button";}
+}
+
 
 
 

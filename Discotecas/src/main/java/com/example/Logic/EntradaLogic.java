@@ -10,10 +10,11 @@ import com.example.beans.AsistenteEvento;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
+import com.sendgrid.*;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
-import com.sendgrid.*;
 
 /**
  *
@@ -21,9 +22,11 @@ import com.sendgrid.*;
  */
 public class EntradaLogic {
 
+    public static String API_KEY = "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";
+
     /**
-     * Name: getTicekts Description: Endpoint que consulta todas las entradas
-     * en el sistema Method: Get
+     * Name: getTicekts Description: Endpoint que consulta todas las entradas en
+     * el sistema Method: Get
      *
      * @return Lista de entradas en el sistema
      */
@@ -36,20 +39,20 @@ public class EntradaLogic {
         em.getTransaction().commit();
         return tickets;
     }
-    
+
     /**
-     * Name: findTicekt Description: Endpoint que consulta una entrada
-     * en el sistema Method: Get
+     * Name: findTicekt Description: Endpoint que consulta una entrada en el
+     * sistema Method: Get
+     *
      * @param codigoQR
      * @return Entrada encontrada
      */
-    
-     @ApiMethod(name = "findTicket")
+    @ApiMethod(name = "findTicket")
     public Entrada findTicekt(@Named("codigoQR") String codigoQR) {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
-        Entrada ticket = em.createNamedQuery("Entrada.findByCodigoQR", Entrada.class).setParameter("codigoQR",codigoQR).getSingleResult();
+        Entrada ticket = em.createNamedQuery("Entrada.findByCodigoQR", Entrada.class).setParameter("codigoQR", codigoQR).getSingleResult();
         em.getTransaction().commit();
         return ticket;
     }
@@ -70,45 +73,44 @@ public class EntradaLogic {
         em.getTransaction().begin();
         AsistenteEvento eventAsisstant = em.createNamedQuery("AsistenteEvento.findByIdAsistenteEvento", AsistenteEvento.class).setParameter("idAsistenteEvento", idAsistenteEvento).getSingleResult();
 
-
         Date dateToday = new Date(System.currentTimeMillis());
 
-        
         Entrada ticket = new Entrada();
         ticket.setFechaCompra(dateToday);
         ticket.setAsistenteEventoidAsistenteEvento(eventAsisstant);
         ticket.setIdEntrada(generarNumeroConsecuenteEntrada());
-        ticket.setCodigoQR(ticket.getIdEntrada()+""+ticket.getAsistenteEventoidAsistenteEvento().getIdAsistenteEvento());
-        
+        ticket.setCodigoQR(ticket.getIdEntrada() + "" + ticket.getAsistenteEventoidAsistenteEvento().getIdAsistenteEvento());
+
         em.persist(ticket);
-        //envioDeEntradasPorCorreo(user, ticket.getCodigoQR());
+        envioDeEntradasPorCorreo(eventAsisstant.getAsistenteidAsistente().getCorreo(), ticket.getCodigoQR());
 
         em.getTransaction().commit();
         return ticket;
     }
-    
-    //TODO arreglar en envio de entradas
-/*
-    private void envioDeEntradasPorCorreo(Usuario usuario,String htmlQR) throws Exception{
-        System.out.println("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo():     Entra al método");
-       
-        SendGrid sendgrid = new SendGrid("esteband95","e12345678");
-        SendGrid.Email email = new SendGrid.Email();
 
-        email.addTo("jose0luis41@hotmail.com");
-        email.setFrom("duragi307@hotmail.com");
-        email.setSubject("Ticket para tu entrada en Living Nigth Club");
-        email.setHtml(htmlQR);
-        System.out.println("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo():    Enviando el correo");
-        SendGrid.Response response = sendgrid.send(email);
-        if(response.getCode()!=200){
-            throw new Exception("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo():   Algo fallo");
+    private void envioDeEntradasPorCorreo(String usuario, String contenido) throws IOException {
+        Email from = new Email("contacto@discoweb.com.co");
+        String subject = "Ticket";
+        Email to = new Email(usuario);
+        Content content = new Content("text/html", contenido);
+        Mail mail = new Mail(from, subject, to, content);
+        SendGrid sg = new SendGrid(API_KEY);
+        Request request = new Request();
+
+        try {
+            request.method = Method.POST;
+            request.endpoint = "mail/send";
+            request.body = mail.build();
+            Response response = sg.api(request);
+            System.out.println(response.statusCode);
+            // Sytln(response.headers);stem.out.println(response.body);
+            // System.out.println(response.headers);
+        } catch (IOException ex) {
+            throw ex;
         }
-        System.out.println("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo()    "+ email.getFrom());
-        System.out.println("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo()    "+email.getTos()[0]);
-        System.out.println("com.example.Logic.EntradaLogic.envioDeEntradasPorCorreo()   "+ response.getMessage());
     }
-*/
+
+
     private int generarNumeroConsecuenteEntrada() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();

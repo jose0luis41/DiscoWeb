@@ -1,44 +1,72 @@
+<!DOCTYPE html>
+
 <html>
 <head>
-<title> Forumlario registro Assistant</title>
-<!-- CSS File  -->
+<title> Formulario de Registro Asistente</title>
+<!-- Include CSS File Here -->
 <link rel="stylesheet" href="/css/styles.css"/>
-<!-- JS files -->
+<!-- Include JS File Here -->
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
 </head>
 <body background="">
 
+<ul>
+  <li><a href="/index.html">Home</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="#about">About</a></li>
+  </ul>
 
-<div class="containerRegistro">
-<div class="mainARegistro">
-<h2>Formulario de registro como cliente </h2>
-<form id="form_id" method="post" name="myform">
 
-<label>Nombre :</label>
-<input type="text" name="nombreRegistro" id="nombreRegistroAsistente"/>
+<div class="container">
+  <h2>Formulario para registrarse como Asistente</h2>
+  <form action="/action_page.php">	
 
-<label>Cedula :</label>
-<input type="text" name="cedulaRegistro" id="cedulaRegistroAsistente"/>
+	<div class="form-group">
+      <label for="Nombre">Nombre :</label>
+      <input type="text" class="form-control" id="nombreRegistroAsistente" placeholder="Enter name" name="nombreRegistroAsistente">
+    </div>
 
-<label>Celular :</label>
-<input type="text" name="celularRegistro" id="celularRegistroAsistente"/>
+    <div class="form-group">
+      <label for="Cedula">Cedula :</label>
+      <input type="text" class="form-control" id="cedulaRegistroAsistente" placeholder="Enter your id" name="cedulaRegistroAsistente">
+    </div>
 
-<label>Fecha de Nacimiento :</label>
-<input type="date" id ="fechaNaciRegistroAsistente"name="bday" min="1940-01-01"><br><br>
+    <div class="form-group">
+      <label for="Celular">Celular :</label>
+      <input type="text" class="form-control" id="celularRegistroAsistente" placeholder="Enter your celphone number" name="celularRegistroAsistente">
+    </div>
 
-<label>Correo :</label>
-<input type="text" name="correoRegistro" id="correoRegistroAsistente"/>
+   <div class="form-group">
+      <label for="fechaNac">Fecha de nacimiento :</label>
+      <input type="date"  id="fechaNaciRegistroAsistente" name="fechaNaciRegistroAsistente">
+    </div>
 
-<label>Password :</label>
-<input type="password" name="passwordRegistro" id="passwordRegistroAsistente"/>
+	<div class="form-group">
+      <label for="email">Email :</label>
+      <input type="email" class="form-control" id="correoRegistroAsistente" placeholder="Enter email" name="correoRegistroAsistente">
+    </div>
+    
 
-<label>Confirm password :</label>
-<input type="password" name="password" id="passwordConfirmAsistente"/>
 
-<input type="button" value="Enviar" id="submit" onclick="crearAsistente()"/>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="passwordRegistroAsistente" placeholder="Enter password" name="passwordRegistroAsistente">
+    </div>
 
-</form>
+    <div class="form-group">
+      <label for="pwdConfirm">Confirm Password:</label>
+      <input type="password" class="form-control" id="passwordConfirmAsistente" placeholder="Enter password" name="passwordConfirmAsistente">
+    </div>
+   
+
+    <button type="button" id="submit" onclick="crearAsistente()">Registrar</button>
+  </form>
+</div>
 
  <script src="register.js"></script>
  <script src="https://apis.google.com/js/client.js?onload=initRegistroUsuarios"></script>

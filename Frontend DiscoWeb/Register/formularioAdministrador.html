@@ -1,51 +1,86 @@
+<!DOCTYPE html>
+
 <html>
 <head>
 <title> Formulario de Registro</title>
 <!-- Include CSS File Here -->
 <link rel="stylesheet" href="/css/styles.css"/>
 <!-- Include JS File Here -->
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body background="">
 
+<ul>
+  <li><a href="/index.html">Home</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="#about">About</a></li>
+  </ul>
 
-<div class="containerRegistro">
-<div class="mainARegistro">
-<h2>Formulario de registro como administrador </h2>
-<form id="form_id" method="post" name="myform">
 
-<label>Id Discoteca :</label>
-<input type="text" name="idDiscoteca" id="idDiscoteca"/>
+<div class="container">
+  <h2>Formulario para registrarse como Administrador</h2>
+  <form action="/action_page.php">
+    <div class="form-group">
+      <label for="idDiscoteca">Id de la discoteca:</label>
+      <input type="text" class="form-control" id="idDiscoteca" placeholder="Enter Disco id" name="idDiscoteca">
+    </div>
+	
 
-<label>Nombre :</label>
-<input type="text" name="nombreRegistroAdmin" id="nombreRegistroAdmin"/>
+	<div class="form-group">
+      <label for="Nombre">Nombre :</label>
+      <input type="text" class="form-control" id="nombreRegistroAdmin" placeholder="Enter name" name="nombreRegistroAdmin">
+    </div>
 
-<label>Cedula :</label>
-<input type="text" name="cedulaRegistroAdmin" id="cedulaRegistroAdmin"/>
+    <div class="form-group">
+      <label for="Cedula">Cedula :</label>
+      <input type="text" class="form-control" id="cedulaRegistroAdmin" placeholder="Enter your id" name="cedulaRegistroAdmin">
+    </div>
 
-<label>Celular :</label>
-<input type="text" name="celularRegistroAdmin" id="celularRegistroAdmin"/>
+    <div class="form-group">
+      <label for="Celular">Celular :</label>
+      <input type="text" class="form-control" id="celularRegistroAdmin" placeholder="Enter your celphone number" name="celularRegistroAdmin">
+    </div>
 
-<label>Fecha de Nacimiento :</label>
-<input type="date" id ="fechaNaciRegistroAdmin"name="bday" min="1940-01-01"><br><br>
+   <div class="form-group">
+      <label for="fechaNac">Fecha de nacimiento :</label>
+      <input type="date"  id="fechaNaciRegistroAdmin" name="fechaNaciRegistroAdmin">
+    </div>
 
-<label>Correo :</label>
-<input type="text" name="correoRegistroAdmin" id="correoRegistroAdmin"/>
+	<div class="form-group">
+      <label for="email">Email :</label>
+      <input type="email" class="form-control" id="correoRegistroAdmin" placeholder="Enter email" name="correoRegistroAdmin">
+    </div>
+    
 
-<label>Password :</label>
-<input type="password" name="passwordRegistroAdmin" id="passwordRegistroAdmin"/>
 
-<label>Confirm password :</label>
-<input type="password" name="passwordConfirmRegistroAdmin" id="passwordConfirmRegistroAdmin"/>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="passwordRegistroAdmin" placeholder="Enter password" name="passwordRegistroAdmin">
+    </div>
 
-<input type="button" value="Enviar" id="submit" onclick="crearAdministrador()"/>
+    <div class="form-group">
+      <label for="pwdConfirm">Confirm Password:</label>
+      <input type="password" class="form-control" id="passwordConfirmRegistroAdmin" placeholder="Enter password" name="passwordConfirmRegistroAdmin">
+    </div>
+   
 
-</form>
+    <button type="button" id="submit" onclick="crearAdministrador()">Registrar</button>
+  </form>
+</div>
+
+
+
+
 
 
 <script src="register.js"></script>
  <script src="https://apis.google.com/js/client.js?onload=initRegistroUsuarios"></script>
-
+ 
 
 </body>
 </html>

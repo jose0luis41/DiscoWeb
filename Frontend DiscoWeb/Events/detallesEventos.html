@@ -1,1 +1,69 @@
 <!DOCTYPE html>
+<html>
+<head>
+<!--CSS files-->
+<link rel="stylesheet" href="/css/styles.css"/>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<title id="Eventname"></title>
+
+</head>
+
+<body>
+
+  <ul>
+  <li><a href="/index.html">Home</a></li>
+  <li><a href="#news">News</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="#about">About</a></li>
+  </ul>
+
+    <div class="jumbotron">
+  <h1 align ="center" id="eventName"></h1>      
+</div>
+
+
+<div class= "container" style="overflow-x:auto;">
+  <table class="table" id="EventoDetallado">
+  
+    <tr>
+      <th>Id del evento</th>
+      <th>Nombre del evento</th>
+      <th>Fecha inicio</th>
+      <th>Fecha final</th>
+      <th>Precio</th>
+      <th>Entradas restantes</th>
+       <th>Reservas Restantes</th>
+
+
+    </tr>
+
+     
+  </table>
+</div>
+
+
+
+
+<button type="button" class="btn btn-primary btn-block">Comprar Entrada</button>
+<button type="button" class="btn btn-default btn-block">Hacer Reserva</button>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script src="details.js"></script>
+<script src="events.js"></script>
+<script src="/index.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=initEvent"></script>
+
+
+
+
+
+ 
+
+</body>
+</html>

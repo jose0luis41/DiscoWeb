@@ -35,7 +35,7 @@ listarEventos = function() {
                 var cellPrecio= row.insertCell(5); 
 
                 cellId.innerHTML = events.items[i].idEvento;
-                cellNombre.innerHTML = '<a href='+"javascript:table.onclick;"+'>'+ events.items[i].nombre+'</a>';
+                cellNombre.innerHTML = '<a href= /Events/detallesEventos.html>'+ events.items[i].nombre+'</a>';
                 cellDiscoteca.innerHTML = events.items[i].discotecaidDiscoteca.nombre;
                 cellFecha.innerHTML = events.items[i].fechaInicio;
                 cellFechaFin.innerHTML = events.items[i].fechaFinal;
@@ -48,6 +48,10 @@ listarEventos = function() {
 
 });
 }
+
+
+
+
 
 
 var table = document.getElementsByTagName("table")[0];
@@ -65,11 +69,12 @@ table.onclick = function getIdEventSelected(e) {
         }
     }
 
-    localStorage.setItem('idDiscoteca',data[0]);
-    var prueba = localStorage.getItem('idDiscoteca');
+    localStorage.setItem('idEvento',data[0]);
+    var prueba = localStorage.getItem('idEvento');
     console.log(prueba);
 
     console.log(""+data[0]);
-    return data[0]; 
 
+  //  window.location="/Events/detallesEventos.html";
+    
 };

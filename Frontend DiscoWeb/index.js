@@ -25,7 +25,6 @@ var password = document.getElementById("passwordAdministrator").value;
 
                     var user = resp;
 
-                    localStorage.setItem('user',user);
 
                     setAdministratorCount();
             	}else{
