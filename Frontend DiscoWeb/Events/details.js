@@ -22,6 +22,8 @@ getEventLogin = function(){
       function(resp) {
 
             if( !resp.error && resp!==false){
+              var eventPrecio = localStorage.setItem('precioEvento',resp.precio); 
+
             	document.getElementById("eventName").innerHTML = "Evento: "+ resp.nombre;	
 
             	document.title = resp.nombre;

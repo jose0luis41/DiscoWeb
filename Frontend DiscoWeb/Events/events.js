@@ -78,3 +78,8 @@ table.onclick = function getIdEventSelected(e) {
   //  window.location="/Events/detallesEventos.html";
     
 };
+
+
+function setPageToFormulario(){
+    window.location="/PayU/Formulario.html";
+}
