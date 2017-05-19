@@ -14,18 +14,17 @@
 
 
 validarIngresoAdministrador = function(){
-var username = document.getElementById("usernameAdministrator").value;
+var usernameAdmin = document.getElementById("usernameAdministrator").value;
 var password = document.getElementById("passwordAdministrator").value;
 
- gapi.client.echo.echo.getLoginAdministrator({'correo':username}).execute(
+ gapi.client.echo.echo.getLoginAdministrator({'correo':usernameAdmin}).execute(
       function(resp) {
 
             if( !resp.error && resp!==false){
             	if(resp.contrasena === password){
 
                     var user = resp;
-
-
+                    localStorage.setItem('administrador',usernameAdmin);
                     setAdministratorCount();
             	}else{
             		  alert("Contrasena incorrecta");

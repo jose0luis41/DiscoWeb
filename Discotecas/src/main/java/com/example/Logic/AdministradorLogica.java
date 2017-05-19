@@ -5,6 +5,7 @@
  */
 package com.example.Logic;
 
+import com.example.beans.Evento;
 import com.example.beans.Adminstrador;
 import com.example.beans.Discoteca;
 import com.example.persistence.ClassEntityManagerFactory;
@@ -34,6 +35,23 @@ public class AdministradorLogica {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
         List<Adminstrador> asistentes = em.createNamedQuery("Adminstrador.findAll", Adminstrador.class).getResultList();
+        em.getTransaction().commit();
+        return asistentes;
+    }
+    
+    
+       /**
+     * Name: getAdministrators Description: Endpoint que consulta todos los
+     * adminsitradores en el sistema Method: Get
+     *
+     * @return Lista de asistentes en el sistema
+     */
+    @ApiMethod(name = "showEventsByAdministrator")
+    public List<Evento> getEventsByAdministrators() {
+
+        EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
+        em.getTransaction().begin();
+        List<Evento> asistentes = em.createNamedQuery("Adminstrador.findAll", Evento.class).getResultList();
         em.getTransaction().commit();
         return asistentes;
     }
@@ -176,6 +194,7 @@ public class AdministradorLogica {
      * adminsitrador en el sistema Method: Get
      *
      * @param correo
+     * @throws Exception
      * @return Administrador encontrado
      */
     @ApiMethod(name = "loginAdministrators")
@@ -195,7 +214,9 @@ public class AdministradorLogica {
         em.getTransaction().commit();
         return adminstrador;
     }
-
+    
+    
+    
     private int generarNumeroConsecuenteAdministrador() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
