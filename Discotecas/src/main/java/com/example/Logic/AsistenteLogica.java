@@ -5,11 +5,15 @@
  */
 package com.example.Logic;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.example.beans.*;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.BadRequestException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -163,6 +167,31 @@ public class AsistenteLogica {
 
         return assistantFound;
     }
+    
+    
+          /**
+     * Name: findAssistantByCorreo Description: Endpoint que encuentra un
+     * administrador del sistema Method: Post
+     *
+     * @param correo
+     * @return
+     * @throws Exception
+     */
+    @ApiMethod(name = "findAssistantByCorreo", path = "findAssistantByCorreo")
+    public Asistente findAssistantByCorreo(@Named("correo") String correo) throws Exception {
+        EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
+        em.getTransaction().begin();
+
+        Asistente assistantFound = em.createNamedQuery("Asistente.findByCorreo", Asistente.class).setParameter("correo", correo).getSingleResult();
+        if (assistantFound == null) {
+            throw new Exception("No existe el Asistente con el correo: " + correo);
+        }
+
+        em.getTransaction().commit();
+
+        return assistantFound;
+    }
+    
 
     /**
      * Name: getLoginAdministrator Description: Endpoint que consulta un
@@ -172,8 +201,8 @@ public class AsistenteLogica {
      * @throws Exception
      * @return Asistente encontrado
      */
-    @ApiMethod(name = "loginAssistant")
-    public Asistente getLoginAsistente(@Named("correo") String correo) throws Exception {
+    @ApiMethod(name = "loginAssistant", path = "loginAssistant/success")
+    public JWTE getLoginAsistente(@Named("correo") String correo) throws Exception {
 
         if (correo == null || correo.equalsIgnoreCase("")) {
             throw new BadRequestException("No se ha escrito correos");
@@ -184,10 +213,22 @@ public class AsistenteLogica {
         em.getTransaction().begin();
         Asistente asistente = em.createNamedQuery("Asistente.findByCorreo", Asistente.class).setParameter("correo", correo).getSingleResult();
         if (asistente == null) {
-            throw new NoResultException("No existe el administrador con correo " + correo);
+            throw new NoResultException("No existe el asistente con correo " + correo);
         }
         em.getTransaction().commit();
-        return asistente;
+       
+        Date date = new Date();
+        String dt = date.getYear()+"-"+date.getMonth()+"-"+date.getDay();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        c.setTime(sdf.parse(dt));
+        c.add(Calendar.DATE, 1);
+        dt = sdf.format(c.getTime());
+        String jwtToken = JWT.create().withClaim("Id", asistente.getIdAsistente()).withExpiresAt(c.getTime()).sign(Algorithm.HMAC256("QWHDIKSEUNSJHDE"));
+        
+        JWTE token = new com.example.Logic.JWTE(asistente.getIdAsistente().toString(), jwtToken);
+        
+        return token;
     }
     
 

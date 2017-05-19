@@ -18,7 +18,7 @@ function initWelcome() {
 getUserLogin = function(){
    var emailStoraged = localStorage.getItem('usuario'); 
 
-	 gapi.client.echo.echo.getLoginAsistente({'correo':emailStoraged}).execute(
+	 gapi.client.echo.echo.findAssistantByCorreo({'correo':emailStoraged}).execute(
       function(resp) {
 
             if( !resp.error && resp!==false){

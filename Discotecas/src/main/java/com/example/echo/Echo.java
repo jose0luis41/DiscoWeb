@@ -129,7 +129,7 @@ public class Echo {
 
     /**
      * Name: findAssistant Description: Delegado que busca un asistente del
-     * sistema 
+     * sistema
      *
      * @param cedula
      * @return Asistente encontrado del sistema
@@ -139,13 +139,19 @@ public class Echo {
     }
 
     /**
-     * Name: getLoginAsistente Description: Delegado que busca un asistente del sistema por el correo
+     * Name: getLoginAsistente Description: Delegado que busca un asistente del
+     * sistema por el correo
+     *
      * @param correo
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
-    public Asistente getLoginAsistente(@Named("correo") String correo) throws Exception {
+    public JWTE loginAsistente(@Named("correo") String correo) throws Exception {
         return assistantLogic.getLoginAsistente(correo);
+    }
+
+    public Asistente findAssistantByCorreo(@Named("correo") String correo) throws Exception {
+        return assistantLogic.findAssistantByCorreo(correo);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -217,14 +223,13 @@ public class Echo {
         return administratorLogic.findAdministrator(cedula);
     }
 
-    public JWTE getLoginAdministrator(@Named("correo") String correo) throws Exception {
+    public JWTE loginAdministrator(@Named("correo") String correo) throws Exception {
         return administratorLogic.getLoginAdministrator(correo);
     }
-    
+
     public Adminstrador findAdministratorByCorreo(@Named("correo") String correo) throws Exception {
         return administratorLogic.findAdministratorByCorreo(correo);
     }
-
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------

@@ -22,11 +22,11 @@ validarIngresoAdministrador = function(){
 var usernameAdmin = document.getElementById("usernameAdministrator").value;
 var password = document.getElementById("passwordAdministrator").value;
 
- gapi.client.echo.echo.getLoginAdministrator({'correo':usernameAdmin}).execute(
+ gapi.client.echo.echo.loginAdministrator({'correo':usernameAdmin}).execute(
       function(resp) {
 
             if( !resp.error && resp!==false){
-                var tokenStoraged = localStorage.setItem('tokeAdmin',resp.token);
+                var tokenStoragedAdmin = localStorage.setItem('tokeAdmin',resp.token);
                 
 
         gapi.client.echo.echo.findAdministratorByCorreo({'correo':usernameAdmin}).execute(
@@ -60,16 +60,25 @@ validarIngresoAsistente = function(){
 var username = document.getElementById("usernameAssistant").value;
 var password = document.getElementById("passwordAssistant").value;
 
- gapi.client.echo.echo.getLoginAsistente({'correo':username}).execute(
+ gapi.client.echo.echo.loginAsistente({'correo':username}).execute(
       function(resp) {
 
             if( !resp.error && resp!==false){
-                if(resp.contrasena === password){
+
+        var tokenStoragedAssistant = localStorage.setItem('tokeAssistant',resp.token);
+
+ gapi.client.echo.echo.findAssistantByCorreo({'correo':username}).execute(
+            function(respAssistant) {
+
+
+                if(respAssistant.contrasena === password){
                     localStorage.setItem('usuario',username);
                     setAssistantCount();
                 }else{
                       alert("Contrasena incorrecta");
                 }
+
+                }); 
             }else if(resp.code ===400){
                     alert(resp.error);
             }else{

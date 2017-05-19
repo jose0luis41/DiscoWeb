@@ -227,12 +227,13 @@ public class AdministradorLogica {
      * @throws Exception
      * @return Administrador encontrado
      */
-    @ApiMethod(name = "loginAdministrators")
+    @ApiMethod(name = "loginAdministrators",path = "loginAdministrators/success")
     public JWTE getLoginAdministrator(@Named("correo") String correo) throws Exception {
 
         if (correo == null || correo.equalsIgnoreCase("")) {
             throw new BadRequestException("No se ha escrito correos");
 
+            
         }
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
@@ -243,7 +244,6 @@ public class AdministradorLogica {
         }
         em.getTransaction().commit();
         
-        LoginState lgState = LoginState.getInstance();
         Date date = new Date();
         String dt = date.getYear()+"-"+date.getMonth()+"-"+date.getDay();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -254,7 +254,6 @@ public class AdministradorLogica {
         String jwtToken = JWT.create().withClaim("Id", adminstrador.getIdAdministrador()).withExpiresAt(c.getTime()).sign(Algorithm.HMAC256("QWHDIKSEUNSJHDE"));
         
         JWTE token = new com.example.Logic.JWTE(adminstrador.getIdAdministrador().toString(), jwtToken);
-        lgState.setToken(token);
         
         return token;
     }
