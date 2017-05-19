@@ -220,6 +220,11 @@ public class Echo {
     public JWTE getLoginAdministrator(@Named("correo") String correo) throws Exception {
         return administratorLogic.getLoginAdministrator(correo);
     }
+    
+    public Adminstrador findAdministratorByCorreo(@Named("correo") String correo) throws Exception {
+        return administratorLogic.findAdministratorByCorreo(correo);
+    }
+
 
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------

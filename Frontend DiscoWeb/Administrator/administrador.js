@@ -16,10 +16,10 @@ function initWelcomeAdmin() {
 getAdminLogin = function(){
    var emailAdminStoraged = localStorage.getItem('administrador'); 
 
-	 gapi.client.echo.echo.getLoginAdministrator({'correo':emailAdminStoraged}).execute(
+	 gapi.client.echo.echo.findAdministratorByCorreo({'correo':emailAdminStoraged}).execute(
       function(resp) {
-
             if( !resp.error && resp!==false){
+                console.log(resp.nombre);
             	document.getElementById("welcome").innerHTML = "Bienvenido a "+ resp.discotecaidDiscoteca.nombre;	
             	document.getElementById("userNameAdmin").innerHTML = resp.nombre;	
 
@@ -33,3 +33,6 @@ getAdminLogin = function(){
     });
 
 }
+
+
+

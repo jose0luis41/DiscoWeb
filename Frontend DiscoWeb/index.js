@@ -11,6 +11,11 @@
     gapi.client.load('echo', 'v1', callback, ROOT_LOCAL);
 }
 
+function parseJwt (token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace('-', '+').replace('_', '/');
+            return JSON.parse(window.atob(base64));
+        };
 
 
 validarIngresoAdministrador = function(){
@@ -21,14 +26,22 @@ var password = document.getElementById("passwordAdministrator").value;
       function(resp) {
 
             if( !resp.error && resp!==false){
-            	if(resp.contrasena === password){
+                var tokenStoraged = localStorage.setItem('tokeAdmin',resp.token);
+                
 
-                    var user = resp;
+        gapi.client.echo.echo.findAdministratorByCorreo({'correo':usernameAdmin}).execute(
+            function(respAdmin) {
+
+
+            	if(respAdmin.contrasena === password){
+
                     localStorage.setItem('administrador',usernameAdmin);
                     setAdministratorCount();
             	}else{
             		  alert("Contrasena incorrecta");
             	}
+                  });
+
             }else if(resp.code ===400){
                     alert(resp.error);
             }else{
@@ -69,6 +82,8 @@ var password = document.getElementById("passwordAssistant").value;
         
 
 }
+
+
 
 
 

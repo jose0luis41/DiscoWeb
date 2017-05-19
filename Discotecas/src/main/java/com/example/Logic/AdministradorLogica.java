@@ -196,6 +196,29 @@ public class AdministradorLogica {
         return administratorFound;
     }
     
+        /**
+     * Name: findAdministrator Description: Endpoint que encuentra un
+     * administrador del sistema Method: Post
+     *
+     * @param correo
+     * @return
+     * @throws Exception
+     */
+    @ApiMethod(name = "findAdministratorByCorreo", path = "findAdministratorByCorreo")
+    public Adminstrador findAdministratorByCorreo(@Named("correo") String correo) throws Exception {
+        EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
+        em.getTransaction().begin();
+
+        Adminstrador administratorFound = em.createNamedQuery("Adminstrador.findByCorreo", Adminstrador.class).setParameter("correo", correo).getSingleResult();
+        if (administratorFound == null) {
+            throw new Exception("No existe el administrador con el correo: " + correo);
+        }
+
+        em.getTransaction().commit();
+
+        return administratorFound;
+    }
+    
      /**
      * Name: loginAdministrator Description: Endpoint que consulta un
      * adminsitrador en el sistema Method: Get
@@ -256,7 +279,7 @@ public class AdministradorLogica {
         em.getTransaction().commit();
         return cantidad;
     }
-    
+    /*
     public static boolean verificarJWT(JWTE jwt){
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         Adminstrador adminstrador = em.createNamedQuery("Adminstrador.findByIdAdministrador", Adminstrador.class).setParameter("idAdministrador", LoginState.getInstance().getToken().getId()).getSingleResult();
@@ -282,5 +305,5 @@ public class AdministradorLogica {
         }
         
         
-    }
+    }*/
 }
