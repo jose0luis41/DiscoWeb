@@ -46,4 +46,8 @@ cd ~/.../Discotecas
 
 **5)** Cuando se esté dentro de esta carpeta se corre el comando **mvn appdengine:devserver**
 
-**6)** Esperar a que suba el proyecto, para probar los endpoints.
+**6)** Esperar a que suba el proyecto, para probar los endpoints con el Frontend.
+
+
+**Pasos para configurar el frontend**
+
