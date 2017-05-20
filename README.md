@@ -2,7 +2,7 @@
 # DiscoWeb BACKEND y FRONTEND
 
 
-**Pasos para configurar el backend**
+# Pasos para configurar el backend
 
 **1)** Descargar el archivo DiscotecaFinal.mwb que se encuentra dentro de la carpeta Modelo.
 
@@ -49,5 +49,5 @@ cd ~/.../Discotecas
 **6)** Esperar a que suba el proyecto, para probar los endpoints con el Frontend.
 
 
-**Pasos para configurar el frontend**
+# Pasos para configurar el frontend
 
