@@ -5,11 +5,10 @@
  */
 package com.example.Logic;
 
-import com.auth0.jwt.*;
 import com.example.beans.Evento;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.beans.Adminstrador;
 import com.example.beans.Discoteca;
@@ -17,6 +16,10 @@ import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.BadRequestException;
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.NotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,9 +48,8 @@ public class AdministradorLogica {
         em.getTransaction().commit();
         return asistentes;
     }
-    
-    
-       /**
+
+    /**
      * Name: getAdministrators Description: Endpoint que consulta todos los
      * adminsitradores en el sistema Method: Get
      *
@@ -78,7 +80,7 @@ public class AdministradorLogica {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
         em.getTransaction().begin();
-        System.out.println("com.example.Logic.AdministradorLogica.createAdministrator():    "+adminstrador.getFechaNac());
+        System.out.println("com.example.Logic.AdministradorLogica.createAdministrator():    " + adminstrador.getFechaNac());
         if (adminstrador == null) {
             throw new Exception("El administrador es null");
         } else if (adminstrador.getCedula() == null || adminstrador.getCedula().equalsIgnoreCase("")) {
@@ -195,8 +197,8 @@ public class AdministradorLogica {
 
         return administratorFound;
     }
-    
-        /**
+
+    /**
      * Name: findAdministrator Description: Endpoint que encuentra un
      * administrador del sistema Method: Post
      *
@@ -218,8 +220,8 @@ public class AdministradorLogica {
 
         return administratorFound;
     }
-    
-     /**
+
+    /**
      * Name: loginAdministrator Description: Endpoint que consulta un
      * adminsitrador en el sistema Method: Get
      *
@@ -227,13 +229,12 @@ public class AdministradorLogica {
      * @throws Exception
      * @return Administrador encontrado
      */
-    @ApiMethod(name = "loginAdministrators",path = "loginAdministrators/success")
-    public JWTE getLoginAdministrator(@Named("correo") String correo) throws Exception {
+    @ApiMethod(name = "loginAdministrators", path = "loginAdministrators/success")
+    public JWTE getLoginAdministrator(@Named("correo") String correo) throws BadRequestException, ForbiddenException, NotFoundException, ParseException, UnsupportedEncodingException {
 
         if (correo == null || correo.equalsIgnoreCase("")) {
             throw new BadRequestException("No se ha escrito correos");
 
-            
         }
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
@@ -243,29 +244,26 @@ public class AdministradorLogica {
             throw new NoResultException("No existe el administrador con correo " + correo);
         }
         em.getTransaction().commit();
-        
+
         Date date = new Date();
-        String dt = date.getYear()+"-"+date.getMonth()+"-"+date.getDay();
+        String dt = date.getYear() + "-" + date.getMonth() + "-" + date.getDay();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(sdf.parse(dt));
         c.add(Calendar.DATE, 1);
         dt = sdf.format(c.getTime());
-        String jwtToken = JWT.create().withClaim("Id", adminstrador.getIdAdministrador()).withExpiresAt(c.getTime()).sign(Algorithm.HMAC256("QWHDIKSEUNSJHDE"));
-        
+        String jwtToken = JWT.create().withClaim("Id", adminstrador.getIdAdministrador()).withClaim("disco", adminstrador.getDiscotecaidDiscoteca().getIdDiscoteca()).withExpiresAt(c.getTime()).sign(Algorithm.HMAC256("QWHDIKSEUNSJHDE"));
+
         JWTE token = new com.example.Logic.JWTE(adminstrador.getIdAdministrador().toString(), jwtToken);
-        
+
         return token;
     }
-    
-    
-    
+
     private int generarNumeroConsecuenteAdministrador() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
         em.getTransaction().begin();
         int cantidad = 0;
-
 
         if (em.createQuery("SELECT MAX (admin.idAdministrador) FROM Adminstrador admin").getSingleResult() == null) {
             cantidad = 1;
@@ -278,31 +276,45 @@ public class AdministradorLogica {
         em.getTransaction().commit();
         return cantidad;
     }
-    /*
-    public static boolean verificarJWT(JWTE jwt){
+    
+    /**
+     * Se encarga de verificar la validez del jwt
+     * @param jwt
+     * @return el contenido del payload, en caso de que se necesite: claims[0] = idAdmin, claims[1] = idDiscoteca
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException 
+     */
+    public static int[] verificarJWT(JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
-        Adminstrador adminstrador = em.createNamedQuery("Adminstrador.findByIdAdministrador", Adminstrador.class).setParameter("idAdministrador", LoginState.getInstance().getToken().getId()).getSingleResult();
-        try{
-            
-            DecodedJWT dec = JWT.decode(LoginState.getInstance().getToken().getToken());
-            if(adminstrador != null){
-                if(jwt.getId().equals(adminstrador.getIdAdministrador())){
-                return true;
-                }
-                else{
-                    return false;
-                }
-            }
-            else{
-                return false;
-            }
-            
-        }
-        catch(JWTDecodeException e){
-            e.printStackTrace();
-            return false;
+        DecodedJWT dec = JWT.decode(jwt.getToken());
+        int[] claims = new int[2];
+        if(dec.getExpiresAt().getDate() < Calendar.DATE){
+            throw new ForbiddenException("Token has expired");
         }
         
+        Claim claim1 = dec.getClaim("Id");
+        Claim claim2 = dec.getClaim("disco");
+
+        if (claim1.isNull() || claim2.isNull()) {
+            throw new BadRequestException("claim is null");
+        }
+        int idAdmin = claim1.asInt();
+        int idDisco = claim2.asInt();
+
+        Adminstrador adminstrador = em.createNamedQuery("Adminstrador.findByIdAdministrador", Adminstrador.class).setParameter("idAdministrador", idAdmin).getSingleResult();
+
+        if (adminstrador == null) {
+            throw new NotFoundException("Admin with id[" + idAdmin + "] doesn't exist");
+        }
         
-    }*/
+        if(adminstrador.getDiscotecaidDiscoteca().getIdDiscoteca()!=idDisco){
+            throw new ForbiddenException("user is not an admin of disco "+idDisco);
+        }
+        
+        claims[0] = idAdmin;
+        claims[1] = idDisco;
+        
+        return claims;
+    }
 }

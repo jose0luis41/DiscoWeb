@@ -7,11 +7,15 @@ package com.example.Logic;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.beans.*;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.BadRequestException;
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.NotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -246,6 +250,30 @@ public class AsistenteLogica {
         }
         em.getTransaction().commit();
         return cantidad;
+    }
+    
+    public static void verificarJWT(JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException {
+        EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
+        DecodedJWT dec = JWT.decode(jwt.getToken());
+        
+        if(dec.getExpiresAt().getDate() < Calendar.DATE){
+            throw new ForbiddenException("Token has expired");
+        }
+        
+        Claim claim1 = dec.getClaim("Id");
+
+        if (claim1.isNull()) {
+            throw new BadRequestException("claim is null");
+        }
+        int idAsis = claim1.asInt();
+
+        Asistente asistente = em.createNamedQuery("Asistente.findByIdAsistente", Asistente.class).setParameter("idAsistente", idAsis).getSingleResult();
+
+        if (asistente == null) {
+            throw new NotFoundException("Assistant with id[" + idAsis + "] doesn't exist");
+        }
+        //TODO
+
     }
 
 }

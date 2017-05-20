@@ -5,11 +5,16 @@
  */
 package com.example.Logic;
 
+import com.example.beans.Adminstrador;
 import com.example.beans.Evento;
 import com.example.beans.Discoteca;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
+import com.google.api.server.spi.response.BadRequestException;
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.NotFoundException;
+import com.google.api.server.spi.response.UnauthorizedException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +53,9 @@ public class EventoLogica {
      * @throws Exception cuando los parametros obligatorios no son ingresados
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "createEvent", path = "createEvent/success")
-    public Evento createEvent(Evento evento, @Named("idDiscoteca")Integer idDiscoteca,@Named("precio") Integer precio) throws Exception {
+    public Evento createEvent(Evento evento, @Named("idDiscoteca") Integer idDiscoteca, @Named("precio") Integer precio, JWTE jwt) throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+
+        int[] claims = AdministradorLogica.verificarJWT(jwt);
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
@@ -72,18 +79,24 @@ public class EventoLogica {
         }
 
         Discoteca discoteca = em.createNamedQuery("Discoteca.findByIdDiscoteca", Discoteca.class).setParameter("idDiscoteca", idDiscoteca).getSingleResult();
-        evento.setIdEvento(generarNumeroConsecuenteEvento());
-        evento.setPrecio(BigDecimal.valueOf(precio));
-        evento.setDiscotecaidDiscoteca(discoteca);
-        em.persist(evento);
-        em.getTransaction().commit();
+        if (discoteca.getIdDiscoteca() == claims[1]) {
+
+            evento.setIdEvento(generarNumeroConsecuenteEvento());
+            evento.setPrecio(BigDecimal.valueOf(precio));
+            evento.setDiscotecaidDiscoteca(discoteca);
+            em.persist(evento);
+            em.getTransaction().commit();
+        }
+        else{
+            throw new UnauthorizedException("Admin is not allowed to create an event in another disco different from his");
+        }
 
         return evento;
     }
 
     /**
-     * Name: editEvent Description: Endpoint que edita una discoteca del
-     * sistema Method: Put
+     * Name: editEvent Description: Endpoint que edita una discoteca del sistema
+     * Method: Put
      *
      * @param idEvento
      * @param fechaInicio
@@ -96,8 +109,10 @@ public class EventoLogica {
      * @throws Exception
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT, name = "editEvent", path = "editEvent")
-    public Evento editEvent(@Named("idEvento") Integer idEvento, @Named("fechaInicio") Date fechaInicio, @Named("fechaFinal") Date fechaFinal,@Named("maxEntradas") Integer maxEntradas, @Named("maxReservas") Integer maxReservas, @Named("nombre") String nombre, @Named("precio") Integer precio) throws Exception {
+    public Evento editEvent(@Named("idEvento") Integer idEvento, @Named("fechaInicio") Date fechaInicio, @Named("fechaFinal") Date fechaFinal, @Named("maxEntradas") Integer maxEntradas, @Named("maxReservas") Integer maxReservas, @Named("nombre") String nombre, @Named("precio") Integer precio, JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
 
+        int[] claims = AdministradorLogica.verificarJWT(jwt);
+        
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
 
@@ -119,6 +134,8 @@ public class EventoLogica {
 
         Evento eventFound = em.createNamedQuery("Evento.findByIdEvento", Evento.class).setParameter("idEvento", idEvento).getSingleResult();
 
+        if(eventFound.getDiscotecaidDiscoteca().getIdDiscoteca()==claims[1]){
+        
         eventFound.setFechaFinal(fechaFinal);
         eventFound.setFechaInicio(fechaInicio);
         eventFound.setMaxEntradas(maxEntradas);
@@ -131,30 +148,42 @@ public class EventoLogica {
         em.getTransaction().commit();
         em.refresh(eventFound);
         return eventFound;
+        }
+        else{
+            throw new UnauthorizedException("Admin is not allowed to modify an event in another disco different from his");
+        }
     }
 
     /**
-     * Name: deleteEvent Description: Endpoint que elimina un evento de una discoteca del
-     * sistema Method: Delete
+     * Name: deleteEvent Description: Endpoint que elimina un evento de una
+     * discoteca del sistema Method: Delete
      *
      * @param idEvento
      * @return Asistente borrado del sistema
      */
     @ApiMethod(name = "deleteEvent", path = "deleteEvent/{idEvento}")
-    public Evento deleteEvent(@Named("idEvento") Integer idEvento) {
+    public Evento deleteEvent(@Named("idEvento") Integer idEvento, JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException{
 
+        
+        int[] claims = AdministradorLogica.verificarJWT(jwt);
+        
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
         Evento eventFound = em.createNamedQuery("Evento.findByIdEvento", Evento.class).setParameter("idEvento", idEvento).getSingleResult();
 
+        if(eventFound.getDiscotecaidDiscoteca().getIdDiscoteca()==claims[1]){
         em.remove(eventFound);
         em.getTransaction().commit();
         return eventFound;
+        }
+        else{
+            throw new UnauthorizedException("Admin is not allowed to delete an event in another disco different from his");
+        }
     }
 
     /**
-     * Name: findEvent Description: Endpoint que encuentra un evento del
-     * sistema Method: Post
+     * Name: findEvent Description: Endpoint que encuentra un evento del sistema
+     * Method: Post
      *
      * @param idEvento
      * @return
