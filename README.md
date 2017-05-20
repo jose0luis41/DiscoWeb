@@ -1,6 +1,6 @@
 # DiscoWeb
 
-# DiscoWeb BACKEND
+# DiscoWeb BACKEND y FRONTEND
 
 
 **Pasos para configurar el backend**
