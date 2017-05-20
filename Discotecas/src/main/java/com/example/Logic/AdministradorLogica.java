@@ -221,13 +221,18 @@ public class AdministradorLogica {
         return administratorFound;
     }
 
+ 
     /**
      * Name: loginAdministrator Description: Endpoint que consulta un
      * adminsitrador en el sistema Method: Get
      *
      * @param correo
-     * @throws Exception
-     * @return Administrador encontrado
+     * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ParseException
+     * @throws UnsupportedEncodingException
      */
     @ApiMethod(name = "loginAdministrators", path = "loginAdministrators/success")
     public JWTE getLoginAdministrator(@Named("correo") String correo) throws BadRequestException, ForbiddenException, NotFoundException, ParseException, UnsupportedEncodingException {
@@ -276,23 +281,25 @@ public class AdministradorLogica {
         em.getTransaction().commit();
         return cantidad;
     }
-    
+
     /**
      * Se encarga de verificar la validez del jwt
+     *
      * @param jwt
-     * @return el contenido del payload, en caso de que se necesite: claims[0] = idAdmin, claims[1] = idDiscoteca
+     * @return el contenido del payload, en caso de que se necesite: claims[0] =
+     * idAdmin, claims[1] = idDiscoteca
      * @throws BadRequestException
      * @throws ForbiddenException
-     * @throws NotFoundException 
+     * @throws NotFoundException
      */
-    public static int[] verificarJWT(JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException {
+    public static int[] verificarJWT(String jwt) throws BadRequestException, ForbiddenException, NotFoundException {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
-        DecodedJWT dec = JWT.decode(jwt.getToken());
+        DecodedJWT dec = JWT.decode(jwt);
         int[] claims = new int[2];
-        if(dec.getExpiresAt().getDate() < Calendar.DATE){
+        if (dec.getExpiresAt().getDate() < Calendar.DATE) {
             throw new ForbiddenException("Token has expired");
         }
-        
+
         Claim claim1 = dec.getClaim("Id");
         Claim claim2 = dec.getClaim("disco");
 
@@ -307,14 +314,14 @@ public class AdministradorLogica {
         if (adminstrador == null) {
             throw new NotFoundException("Admin with id[" + idAdmin + "] doesn't exist");
         }
-        
-        if(adminstrador.getDiscotecaidDiscoteca().getIdDiscoteca()!=idDisco){
-            throw new ForbiddenException("user is not an admin of disco "+idDisco);
+
+        if (adminstrador.getDiscotecaidDiscoteca().getIdDiscoteca() != idDisco) {
+            throw new ForbiddenException("user is not an admin of disco " + idDisco);
         }
-        
+
         claims[0] = idAdmin;
         claims[1] = idDisco;
-        
+
         return claims;
     }
 }

@@ -90,12 +90,17 @@ public class DiscotecaLogic {
      *
      * @param idDiscoteca
      * @param nombre
+     * @param jwt
      * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      * @throws Exception
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT, name = "editDisco", path = "editDisco")
-    public Discoteca editDisco(@Named("id") Integer idDiscoteca, @Named("nombre") String nombre, JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
-        
+    public Discoteca editDisco(@Named("id") Integer idDiscoteca, @Named("nombre") String nombre,@Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
+
         int[] claims = AdministradorLogica.verificarJWT(jwt);
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
@@ -106,41 +111,45 @@ public class DiscotecaLogic {
         }
 
         Discoteca discoFound = em.createNamedQuery("Discoteca.findByIdDiscoteca", Discoteca.class).setParameter("idDiscoteca", idDiscoteca).getSingleResult();
-        
-        if(discoFound.getIdDiscoteca()==claims[1]){
-        discoFound.setNombre(nombre);
 
-        em.persist(discoFound);
-        em.getTransaction().commit();
-        em.refresh(discoFound);
-        return discoFound;
-        }
-        else{
+        if (discoFound.getIdDiscoteca() == claims[1]) {
+            discoFound.setNombre(nombre);
+
+            em.persist(discoFound);
+            em.getTransaction().commit();
+            em.refresh(discoFound);
+            return discoFound;
+        } else {
             throw new UnauthorizedException("Admin is not allowed to edit a disco different from his");
         }
     }
+
 
     /**
      * Name: deleteDisco Description: Endpoint que elimina una discoteca del
      * sistema Method: Delete
      *
      * @param nombre
-     * @return Discoteca borrada del sistema
+     * @param jwt
+     * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
     @ApiMethod(name = "deleteDisco", path = "deleteDisco/{cedula}")
-    public Discoteca deleteDisco(@Named("nombre") String nombre, JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException{
+    public Discoteca deleteDisco(@Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
 
         int claims[] = AdministradorLogica.verificarJWT(jwt);
-        
+
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
         Discoteca discoFound = em.createNamedQuery("Discoteca.findByNombre", Discoteca.class).setParameter("nombre", nombre).getSingleResult();
-        if(discoFound.getIdDiscoteca()==claims[1]){
-        em.remove(discoFound);
-        em.getTransaction().commit();
-        return discoFound;
-        }
-        else{
+        if (discoFound.getIdDiscoteca() == claims[1]) {
+            em.remove(discoFound);
+            em.getTransaction().commit();
+            return discoFound;
+        } else {
             throw new UnauthorizedException("Admin is not allowed to delete a disco different from his");
         }
     }

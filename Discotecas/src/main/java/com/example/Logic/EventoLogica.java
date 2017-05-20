@@ -42,18 +42,24 @@ public class EventoLogica {
         return events;
     }
 
+  
     /**
      * Name: createUser Description: Endpoint que crea un nuevo usuario en el
      * sistema Method: Post
      *
      * @param evento
-     * @param idDiscoteca
-     * @param precio
-     * @return Asistente que se ha creado
-     * @throws Exception cuando los parametros obligatorios no son ingresados
+     * @param idDisco
+     * @param precioEvento
+     * @param jwt
+     * @return
+     * @throws Exception
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "createEvent", path = "createEvent/success")
-    public Evento createEvent(Evento evento, @Named("idDiscoteca") Integer idDiscoteca, @Named("precio") Integer precio, JWTE jwt) throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+    public Evento createEvent(Evento evento, @Named("idDisco") Integer idDisco, @Named("precioEvento") Integer precioEvento, @Named("jwt") String jwt) throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
 
         int[] claims = AdministradorLogica.verificarJWT(jwt);
 
@@ -66,7 +72,7 @@ public class EventoLogica {
             throw new Exception("La fecha de inicio es null");
         } else if (evento.getFechaFinal() == null) {
             throw new Exception("La fecha final es null");
-        } else if (idDiscoteca == null) {
+        } else if (idDisco == null) {
             throw new Exception("El id del discoteca a la cual se le va a sociar el evento es null");
         } else if (evento.getMaxEntradas() < 0 || String.valueOf(evento.getMaxEntradas()).equalsIgnoreCase("")) {
             throw new Exception("El maximo de entradas es null o es invalido");
@@ -74,20 +80,19 @@ public class EventoLogica {
             throw new Exception("El maximo de reservas es null o es invalido");
         } else if (evento.getNombre() == null || evento.getNombre().equalsIgnoreCase("")) {
             throw new Exception("El nombre del evento es null");
-        } else if (String.valueOf(precio).equalsIgnoreCase("")) {
+        } else if (String.valueOf(precioEvento).equalsIgnoreCase("")) {
             throw new Exception("El precio es null o es invalido");
         }
 
-        Discoteca discoteca = em.createNamedQuery("Discoteca.findByIdDiscoteca", Discoteca.class).setParameter("idDiscoteca", idDiscoteca).getSingleResult();
+        Discoteca discoteca = em.createNamedQuery("Discoteca.findByIdDiscoteca", Discoteca.class).setParameter("idDiscoteca", idDisco).getSingleResult();
         if (discoteca.getIdDiscoteca() == claims[1]) {
 
             evento.setIdEvento(generarNumeroConsecuenteEvento());
-            evento.setPrecio(BigDecimal.valueOf(precio));
+            evento.setPrecio(BigDecimal.valueOf(precioEvento));
             evento.setDiscotecaidDiscoteca(discoteca);
             em.persist(evento);
             em.getTransaction().commit();
-        }
-        else{
+        } else {
             throw new UnauthorizedException("Admin is not allowed to create an event in another disco different from his");
         }
 
@@ -102,17 +107,22 @@ public class EventoLogica {
      * @param fechaInicio
      * @param fechaFinal
      * @param maxEntradas
-     * @param nombre
      * @param maxReservas
+     * @param nombre
      * @param precio
+     * @param jwt
      * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      * @throws Exception
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT, name = "editEvent", path = "editEvent")
-    public Evento editEvent(@Named("idEvento") Integer idEvento, @Named("fechaInicio") Date fechaInicio, @Named("fechaFinal") Date fechaFinal, @Named("maxEntradas") Integer maxEntradas, @Named("maxReservas") Integer maxReservas, @Named("nombre") String nombre, @Named("precio") Integer precio, JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
+    public Evento editEvent(@Named("idEvento") Integer idEvento, @Named("fechaInicio") Date fechaInicio, @Named("fechaFinal") Date fechaFinal, @Named("maxEntradas") Integer maxEntradas, @Named("maxReservas") Integer maxReservas, @Named("nombre") String nombre, @Named("precio") Integer precio, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
 
         int[] claims = AdministradorLogica.verificarJWT(jwt);
-        
+
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
 
@@ -134,49 +144,57 @@ public class EventoLogica {
 
         Evento eventFound = em.createNamedQuery("Evento.findByIdEvento", Evento.class).setParameter("idEvento", idEvento).getSingleResult();
 
-        if(eventFound.getDiscotecaidDiscoteca().getIdDiscoteca()==claims[1]){
-        
-        eventFound.setFechaFinal(fechaFinal);
-        eventFound.setFechaInicio(fechaInicio);
-        eventFound.setMaxEntradas(maxEntradas);
-        eventFound.setMaxReservas(maxReservas);
-        eventFound.setNombre(nombre);
-        BigDecimal bigDecimalPrecio = BigDecimal.valueOf(precio);
-        eventFound.setPrecio(bigDecimalPrecio);
+        if (eventFound.getDiscotecaidDiscoteca().getIdDiscoteca() == claims[1]) {
 
-        em.persist(eventFound);
-        em.getTransaction().commit();
-        em.refresh(eventFound);
-        return eventFound;
-        }
-        else{
+            eventFound.setFechaFinal(fechaFinal);
+            eventFound.setFechaInicio(fechaInicio);
+            eventFound.setMaxEntradas(maxEntradas);
+            eventFound.setMaxReservas(maxReservas);
+            eventFound.setNombre(nombre);
+            BigDecimal bigDecimalPrecio = BigDecimal.valueOf(precio);
+            eventFound.setPrecio(bigDecimalPrecio);
+
+            em.persist(eventFound);
+            em.getTransaction().commit();
+            em.refresh(eventFound);
+            return eventFound;
+        } else {
             throw new UnauthorizedException("Admin is not allowed to modify an event in another disco different from his");
         }
     }
 
     /**
-     * Name: deleteEvent Description: Endpoint que elimina un evento de una
-     * discoteca del sistema Method: Delete
+     *
      *
      * @param idEvento
      * @return Asistente borrado del sistema
      */
+    /**
+     * Name: deleteEvent Description: Endpoint que elimina un evento de una
+     * discoteca del sistema Method: Delete
+     *
+     * @param idEvento
+     * @param jwt
+     * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
+     */
     @ApiMethod(name = "deleteEvent", path = "deleteEvent/{idEvento}")
-    public Evento deleteEvent(@Named("idEvento") Integer idEvento, JWTE jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException{
+    public Evento deleteEvent(@Named("idEvento") Integer idEvento,@Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
 
-        
         int[] claims = AdministradorLogica.verificarJWT(jwt);
-        
+
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
         Evento eventFound = em.createNamedQuery("Evento.findByIdEvento", Evento.class).setParameter("idEvento", idEvento).getSingleResult();
 
-        if(eventFound.getDiscotecaidDiscoteca().getIdDiscoteca()==claims[1]){
-        em.remove(eventFound);
-        em.getTransaction().commit();
-        return eventFound;
-        }
-        else{
+        if (eventFound.getDiscotecaidDiscoteca().getIdDiscoteca() == claims[1]) {
+            em.remove(eventFound);
+            em.getTransaction().commit();
+            return eventFound;
+        } else {
             throw new UnauthorizedException("Admin is not allowed to delete an event in another disco different from his");
         }
     }

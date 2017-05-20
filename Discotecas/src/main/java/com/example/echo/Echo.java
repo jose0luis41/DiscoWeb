@@ -321,21 +321,37 @@ public class Echo {
      *
      * @param idDiscoteca
      * @param nombre
+     * @param jwt
      * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      * @throws Exception
      */
-    public Discoteca editDisco(@Named("id") Integer idDiscoteca, @Named("nombre") String nombre, JWTE jwt) throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+    public Discoteca editDisco(@Named("id") Integer idDiscoteca, @Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
         return discotecaLogic.editDisco(idDiscoteca, nombre, jwt);
     }
 
+    /**
+     *
+     *
+     * @param nombre
+     * @return
+     */
     /**
      * Name: deleteDisco Description: Delegado que elimina una discoteca del
      * sistema Method: DELETE
      *
      * @param nombre
+     * @param jwt
      * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
-    public Discoteca deleteDisco(@Named("nombre") String nombre, JWTE jwt)throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException{
+    public Discoteca deleteDisco(@Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
         return discotecaLogic.deleteDisco(nombre, jwt);
     }
 
@@ -373,13 +389,18 @@ public class Echo {
      * discoteca del sistema Method: POST
      *
      * @param evento
-     * @param idDisc
+     * @param idDisco
      * @param precioEvento
+     * @param jwt
      * @return
      * @throws Exception
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
-    public Evento createEvent(Evento evento, @Named("idDisc") Integer idDisc, @Named("precioEvento") Integer precioEvento, JWTE jwt) throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
-        return eventoLogica.createEvent(evento, idDisc, precioEvento, jwt);
+    public Evento createEvent(Evento evento, @Named("idDisco") Integer idDisco, @Named("precioEvento") Integer precioEvento, @Named("jwt") String jwt) throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+        return eventoLogica.createEvent(evento, idDisco, precioEvento, jwt);
     }
 
     /**
@@ -393,10 +414,15 @@ public class Echo {
      * @param maxReservas
      * @param nombre
      * @param precio
+     * @param jwt
      * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      * @throws Exception
      */
-    public Evento editEvent(@Named("idEvento") Integer idEvento, @Named("fechaInicio") Date fechaInicio, @Named("fechaFinal") Date fechaFinal, @Named("maxEntradas") Integer maxEntradas, @Named("maxReservas") Integer maxReservas, @Named("nombre") String nombre, @Named("precio") Integer precio, JWTE jwt) throws Exception {
+    public Evento editEvent(@Named("idEvento") Integer idEvento, @Named("fechaInicio") Date fechaInicio, @Named("fechaFinal") Date fechaFinal, @Named("maxEntradas") Integer maxEntradas, @Named("maxReservas") Integer maxReservas, @Named("nombre") String nombre, @Named("precio") Integer precio, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
         return eventoLogica.editEvent(idEvento, fechaInicio, fechaFinal, maxEntradas, maxReservas, nombre, precio, jwt);
     }
 
@@ -405,9 +431,14 @@ public class Echo {
      * sistema Method: DELETE
      *
      * @param idEvento
+     * @param jwt
      * @return
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
-    public Evento deleteEvento(@Named("idEvento") Integer idEvento, JWTE jwt)throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+    public Evento deleteEvent(@Named("idEvento") Integer idEvento, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
         return eventoLogica.deleteEvent(idEvento, jwt);
     }
 
