@@ -51,3 +51,11 @@ cd ~/.../Discotecas
 
 # Pasos para configurar el frontend
 
+**1)** Como el proyecto no está aún subido se debe descargar la extensión 200 OK de Google Chrome para poder abrir el Frontend.
+
+**2)** Cuando descargue, se inicia la aplicación y se escoge la carpeta **FrontEnd** del proyecto en el **CHOOSE FOLDER** de la extensión.
+
+**3)** Por último se abre el index con la ip que nos provee la extensión descargada y se puede interactuar con la aplicación.
+
+
+
