@@ -1,4 +1,3 @@
-# DiscoWeb
 
 # DiscoWeb BACKEND y FRONTEND
 
