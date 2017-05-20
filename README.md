@@ -8,7 +8,9 @@
 
 **2)** Abrir el modelo con MySQLWorkbench y generar la base de datos a partir del modelo.
 
-**3)** Cambiar el archivo presistence.xml que se encuetra en el directorio **Discotecas/src/main/resources/META-INF/** por las configuraciones de tu user, password y nombre de la base de datos creada.
+**3)** Es importante crear datos reales en la base de datos para poder interactuar de la mejor manera en el frontend
+
+**4)** Cambiar el archivo presistence.xml que se encuetra en el directorio **Discotecas/src/main/resources/META-INF/** por las configuraciones de tu user, password y nombre de la base de datos creada.
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_0.xsd">
@@ -39,14 +41,14 @@
 ```
 
 
-**4)** Navegar hasta la ruta de la carpeta Discotecas 
+**5)** Navegar hasta la ruta de la carpeta Discotecas 
 ```
 cd ~/.../Discotecas 
 ```
 
-**5)** Cuando se esté dentro de esta carpeta se corre el comando **mvn appdengine:devserver**
+**6)** Cuando se esté dentro de esta carpeta se corre el comando **mvn appdengine:devserver**
 
-**6)** Esperar a que suba el proyecto, para probar los endpoints con el Frontend.
+**7)** Esperar a que suba el proyecto, para probar los endpoints con el Frontend.
 
 
 # Pasos para configurar el frontend
