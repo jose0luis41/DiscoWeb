@@ -67,21 +67,21 @@ public class EventoLogica {
         em.getTransaction().begin();
 
         if (evento == null) {
-            throw new Exception("El evento es null");
+            throw new BadRequestException("El evento es null");
         } else if (evento.getFechaInicio() == null) {
-            throw new Exception("La fecha de inicio es null");
+            throw new BadRequestException("La fecha de inicio es null");
         } else if (evento.getFechaFinal() == null) {
-            throw new Exception("La fecha final es null");
+            throw new BadRequestException("La fecha final es null");
         } else if (idDisco == null) {
-            throw new Exception("El id del discoteca a la cual se le va a sociar el evento es null");
+            throw new BadRequestException("El id del discoteca a la cual se le va a sociar el evento es null");
         } else if (evento.getMaxEntradas() < 0 || String.valueOf(evento.getMaxEntradas()).equalsIgnoreCase("")) {
-            throw new Exception("El maximo de entradas es null o es invalido");
+            throw new BadRequestException("El maximo de entradas es null o es invalido");
         } else if (evento.getMaxReservas() < 0 || String.valueOf(evento.getMaxReservas()).equalsIgnoreCase("")) {
-            throw new Exception("El maximo de reservas es null o es invalido");
+            throw new BadRequestException("El maximo de reservas es null o es invalido");
         } else if (evento.getNombre() == null || evento.getNombre().equalsIgnoreCase("")) {
-            throw new Exception("El nombre del evento es null");
+            throw new BadRequestException("El nombre del evento es null");
         } else if (String.valueOf(precioEvento).equalsIgnoreCase("")) {
-            throw new Exception("El precio es null o es invalido");
+            throw new BadRequestException("El precio es null o es invalido");
         }
 
         Discoteca discoteca = em.createNamedQuery("Discoteca.findByIdDiscoteca", Discoteca.class).setParameter("idDiscoteca", idDisco).getSingleResult();

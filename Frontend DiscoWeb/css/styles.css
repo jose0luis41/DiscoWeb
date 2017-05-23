@@ -1,6 +1,10 @@
 @import url(http://fonts.googleapis.com/css?family=Raleway);
 
-
+#qrcode {
+  width:160px;
+  height:160px;
+  margin-top:15px;
+}
 
 ul {
     list-style-type: none;

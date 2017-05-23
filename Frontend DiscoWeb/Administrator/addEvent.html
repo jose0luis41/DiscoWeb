@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Edit event</title>
+  <title>Add event</title>
 <!--CSS files-->
 <link rel="stylesheet" href="/css/styles.css"/>
 
@@ -52,12 +52,12 @@
   	</ul>
 
       <div class="jumbotron">
-        <h1 id= "editEventJumbotron" align ="center"></h1>      
+        <h1 id= "addEvent" align ="center">Nuevo evento</h1>      
       </div>
 
 
 <div class="container">
-        <h1 align="center">Editar evento</h1>
+        <h1 align="center">Agregar evento</h1>
         
   <form action="/action_page.php">  
 
@@ -82,20 +82,20 @@
         </div>
 
         <div class="form-group">
-            <label for="Entradas">Entradas :</label>
+            <label for="Entradas">Cantidad de Entradas :</label>
             <input type="text" class="form-control" id="entradasEvento" name="entradasEvento">
         </div>
 
         <div class="form-group">
-            <label for="precio">Reservas :</label>
+            <label for="precio">Cantidad de Reservas :</label>
             <input type="text" class="form-control" id="reservasEvento" name="reservasEvento">
         </div>
         
 
 
 
-        <a class="btn btn-info btn-lg" onclick="editEventClick()">
-          <span class="glyphicon glyphicon-pencil"></span> Editar 
+        <a class="btn btn-info btn-lg" onclick="addEventClick()">
+          <span class="glyphicon glyphicon-plus"></span> Agregar 
         </a>
   </form>
 </div>
@@ -103,8 +103,8 @@
 
 
  
-<script src="editEvent.js"></script>
-<script src="https://apis.google.com/js/client.js?onload=initEditEvent"></script>
+<script src="/Administrator/addEvent.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=initAddEvent"></script>
 
 
 </body>

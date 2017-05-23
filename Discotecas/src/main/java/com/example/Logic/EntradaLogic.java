@@ -79,7 +79,7 @@ public class EntradaLogic {
         ticket.setFechaCompra(dateToday);
         ticket.setAsistenteEventoidAsistenteEvento(eventAsisstant);
         ticket.setIdEntrada(generarNumeroConsecuenteEntrada());
-        ticket.setCodigoQR(ticket.getIdEntrada() + "" + ticket.getAsistenteEventoidAsistenteEvento().getIdAsistenteEvento());
+        ticket.setCodigoQR(ticket.getIdEntrada() + "-" + ticket.getAsistenteEventoidAsistenteEvento().getIdAsistenteEvento());
 
         em.persist(ticket);
         envioDeEntradasPorCorreo(eventAsisstant.getAsistenteidAsistente().getCorreo(), ticket.getCodigoQR());

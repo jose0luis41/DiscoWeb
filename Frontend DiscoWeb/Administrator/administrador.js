@@ -71,7 +71,7 @@ listarEventosDisco = function() {
                 celCantidadEntradas.innerHTML = events.items[i].maxEntradas;
                 celCantidadReservas.innerHTML = events.items[i].maxReservas;
                 cellEdit.innerHTML =   '<button type="button" onclick="edtiEventPage()" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span> Edit </button>';  
-                 cellDelete.innerHTML =   '<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span> Delete </button>';  
+                 cellDelete.innerHTML =   '<button type="button" onclick="deleteEventClick()" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span> Delete </button>';  
 
 
                 row = table.insertRow(table.rows.length);
@@ -100,6 +100,35 @@ table.onclick = function getIdEventSelected(e) {
     localStorage.setItem('nameEventJumbotron',data[1]);
     localStorage.setItem('EditEventIdEvento',data[0]);
 };
+
+
+deleteEventClick = function(){
+    var idStoraged = localStorage.getItem('EditEventIdEvento');
+    var jwt = localStorage.getItem('tokeAdmin');
+
+       gapi.client.echo.echo.deleteEvent({'idEvento':idStoraged,'jwt':jwt}).execute(
+      function(resp) {
+         if( !resp.error && resp!==false){
+               alert('Evento eliminado');
+               window.location ='/Administrator/administratorView.html';
+            }else if(resp.code === 403){
+                alert('Su sesión ha caducado');
+                window.location = "/index.html"
+            }
+
+        });
+     
+}
+
+
+
+
+
+
+function addEventPage(){
+  window.location = '/Administrator/addEvent.html';
+}
+
 
 
 function edtiEventPage(){

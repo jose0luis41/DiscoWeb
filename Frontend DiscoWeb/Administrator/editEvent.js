@@ -68,6 +68,9 @@ editEventClick = function(){
 
 
 
+
+
+
 function indexPage(){
     window.location="/index.html";
 }
