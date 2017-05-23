@@ -182,7 +182,7 @@ public class EventoLogica {
      * @throws UnauthorizedException
      */
     @ApiMethod(name = "deleteEvent", path = "deleteEvent/{idEvento}")
-    public Evento deleteEvent(@Named("idEvento") Integer idEvento,@Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+    public Evento deleteEvent(@Named("idEvento") Integer idEvento,@Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException,Exception {
 
         int[] claims = AdministradorLogica.verificarJWT(jwt);
 

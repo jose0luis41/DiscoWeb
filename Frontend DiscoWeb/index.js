@@ -11,11 +11,7 @@
     gapi.client.load('echo', 'v1', callback, ROOT_LOCAL);
 }
 
-function parseJwt (token) {
-            var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace('-', '+').replace('_', '/');
-            return JSON.parse(window.atob(base64));
-        };
+
 
 
 validarIngresoAdministrador = function(){
@@ -44,7 +40,10 @@ var password = document.getElementById("passwordAdministrator").value;
 
             }else if(resp.code ===400){
                     alert(resp.error);
-            }else{
+            }else if(resp.code==503){
+                alert('Error backend'+ resp.error);
+            }
+            else{
                 alert("Error "+ resp.error);
             }
          
@@ -60,34 +59,49 @@ validarIngresoAsistente = function(){
 var username = document.getElementById("usernameAssistant").value;
 var password = document.getElementById("passwordAssistant").value;
 
- gapi.client.echo.echo.loginAsistente({'correo':username}).execute(
+try{
+
+ gapi.client.echo.echo.getLoginAsistente({'correo':username}).execute(
       function(resp) {
 
             if( !resp.error && resp!==false){
 
-        var tokenStoragedAssistant = localStorage.setItem('tokeAssistant',resp.token);
+                var tokenStoragedAssistant = localStorage.setItem('tokeAssistant',resp.token);
 
- gapi.client.echo.echo.findAssistantByCorreo({'correo':username}).execute(
-            function(respAssistant) {
+                gapi.client.echo.echo.findAssistantByCorreo({'correo':username}).execute(
+                    function(respAssistant) {
 
 
-                if(respAssistant.contrasena === password){
-                    localStorage.setItem('usuario',username);
-                    setAssistantCount();
-                }else{
-                      alert("Contrasena incorrecta");
-                }
+                    if(respAssistant.contrasena === password){
+                        localStorage.setItem('usuario',username);
+                        setAssistantCount();
+                    }else{
+                          alert("Contrasena incorrecta");
+                    }
 
                 }); 
-            }else if(resp.code ===400){
-                    alert(resp.error);
-            }else{
-                alert("Error "+ resp.error);
+            }else if(resp.code === 404){
+                    alert("No se ha escrito el correo");
+                    setIndexPage();
+            }
+            else if(resp.code === 503){
+                alert('No se encuentra un usario con el correo: '+username );
+                setIndexPage();
+            }
+
+            else {
+                console.log(resp);
+                setIndexPage();
+                alert("Debes escribir un correo");
+
             }
          
               
     });
-
+}
+catch(e){
+    alert('hola '+e.message);
+}
         
 
 }

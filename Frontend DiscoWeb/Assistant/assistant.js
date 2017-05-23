@@ -22,7 +22,7 @@ getUserLogin = function(){
       function(resp) {
 
             if( !resp.error && resp!==false){
-            	document.getElementById("welcome").innerHTML = "Bienvenido "+ resp.nombre;	
+            	document.getElementById("welcome").innerHTML = "¡Bienvenido "+ resp.nombre+"!";	
             	document.getElementById("userName").innerHTML = resp.nombre;	
 
             	document.title = resp.nombre;

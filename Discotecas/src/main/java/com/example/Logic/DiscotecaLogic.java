@@ -138,7 +138,7 @@ public class DiscotecaLogic {
      * @throws UnauthorizedException
      */
     @ApiMethod(name = "deleteDisco", path = "deleteDisco/{cedula}")
-    public Discoteca deleteDisco(@Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+    public Discoteca deleteDisco(@Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException,Exception {
 
         int claims[] = AdministradorLogica.verificarJWT(jwt);
 

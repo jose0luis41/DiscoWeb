@@ -26,6 +26,7 @@ import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * The Echo API which Endpoints will be exposing.
@@ -148,9 +149,10 @@ public class Echo {
      *
      * @param correo
      * @return
-     * @throws Exception
+     * @throws NotFoundException 
+     * @throws BadRequestException
      */
-    public JWTE loginAsistente(@Named("correo") String correo) throws Exception {
+    public JWTE getLoginAsistente(@Named("correo") String correo) throws BadRequestException,NotFoundException, UnsupportedEncodingException{
         return assistantLogic.getLoginAsistente(correo);
     }
 
@@ -233,6 +235,10 @@ public class Echo {
 
     public Adminstrador findAdministratorByCorreo(@Named("correo") String correo) throws Exception {
         return administratorLogic.findAdministratorByCorreo(correo);
+    }
+
+    public List<Evento> getEventsByAdministrators(@Named("idDiscoteca") Integer idDiscoteca) {
+        return administratorLogic.getEventsByAdministrators(idDiscoteca);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -351,7 +357,7 @@ public class Echo {
      * @throws NotFoundException
      * @throws UnauthorizedException
      */
-    public Discoteca deleteDisco(@Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+    public Discoteca deleteDisco(@Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException,Exception {
         return discotecaLogic.deleteDisco(nombre, jwt);
     }
 
@@ -438,7 +444,7 @@ public class Echo {
      * @throws NotFoundException
      * @throws UnauthorizedException
      */
-    public Evento deleteEvent(@Named("idEvento") Integer idEvento, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+    public Evento deleteEvent(@Named("idEvento") Integer idEvento, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException,Exception {
         return eventoLogica.deleteEvent(idEvento, jwt);
     }
 

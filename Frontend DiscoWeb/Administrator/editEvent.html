@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit event</title>
+<!--CSS files-->
+<link rel="stylesheet" href="/css/styles.css"/>
+
+
+
+</head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<body >
+
+	<ul>
+  <li><a id="userNameAdmin"></a></li>		
+  <li><a href="#contact">Contact</a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+   <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+   <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+   <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+   <li><a>      </a></li>
+  <li><a>      </a></li>
+  <li><a>      </a></li>
+   <li><a>      </a></li>
+    <li><a>      </a></li>
+
+
+
+
+  
+  <li><a><p>Cerrar sesion <span class="glyphicon glyphicon-user"></span></p>       </a></li>
+
+  	</ul>
+
+      <div class="jumbotron">
+        <h1 id= "editEventJumbotron" align ="center"></h1>      
+      </div>
+
+
+<div class="container">
+        <h1 align="center">Editar evento</h1>
+        
+  <form action="/action_page.php">  
+
+        <div class="form-group">
+            <label for="Nombre">Nombre del evento :</label>
+            <input type="text" class="form-control" id="nombreEvento" name="nombreEvento">
+        </div>
+
+        <div class="form-group">
+            <label for="fechaInicio">Fecha de inicio :</label>
+            <input type="date" id="fechaInicio" name="fechaInicio">
+        </div>
+
+        <div class="form-group">
+            <label for="fechaFinal">Fecha de cierre :</label>
+            <input type="date" id="fechaFin" name="fechaFin">
+        </div>
+
+        <div class="form-group">
+            <label for="precio">Precio :</label>
+            <input type="text" class="form-control" id="precioEvento" name="precioEvento">
+        </div>
+
+        <div class="form-group">
+            <label for="Entradas">Entradas :</label>
+            <input type="text" class="form-control" id="entradasEvento" name="entradasEvento">
+        </div>
+
+        <div class="form-group">
+            <label for="precio">Reservas :</label>
+            <input type="text" class="form-control" id="reservasEvento" name="reservasEvento">
+        </div>
+        
+
+
+
+        <a class="btn btn-info btn-lg" onclick="editEventClick()">
+          <span class="glyphicon glyphicon-pencil"></span> Editar 
+        </a>
+  </form>
+</div>
+
+
+
+ 
+<script src="/index.js"></script>
+<script src="editEvent.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=initEditEvent"></script>
+
+
+</body>
+</html>

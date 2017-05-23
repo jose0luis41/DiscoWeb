@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -53,16 +54,18 @@ public class AdministradorLogica {
      * Name: getAdministrators Description: Endpoint que consulta todos los
      * adminsitradores en el sistema Method: Get
      *
+     * @param idDiscoteca
      * @return Lista de asistentes en el sistema
      */
     @ApiMethod(name = "showEventsByAdministrator")
-    public List<Evento> getEventsByAdministrators() {
+    public List<Evento> getEventsByAdministrators(@Named("idDiscoteca") Integer idDiscoteca) {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
-        List<Evento> asistentes = em.createNamedQuery("Adminstrador.findAll", Evento.class).getResultList();
+        Discoteca discoActual = em.createNamedQuery("Discoteca.findByIdDiscoteca", Discoteca.class).setParameter("idDiscoteca", idDiscoteca).getSingleResult();
+        List<Evento> events = discoActual.getEventoList();
         em.getTransaction().commit();
-        return asistentes;
+        return events;
     }
 
     /**
@@ -221,7 +224,6 @@ public class AdministradorLogica {
         return administratorFound;
     }
 
- 
     /**
      * Name: loginAdministrator Description: Endpoint que consulta un
      * adminsitrador en el sistema Method: Get
@@ -250,20 +252,51 @@ public class AdministradorLogica {
         }
         em.getTransaction().commit();
 
-        Date date = new Date();
-        String dt = date.getYear() + "-" + date.getMonth() + "-" + date.getDay();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
+        Date date = new Date();
+        String dt = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + (c.get(Calendar.HOUR_OF_DAY) + 1) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         c.setTime(sdf.parse(dt));
-        c.add(Calendar.DATE, 1);
         dt = sdf.format(c.getTime());
+
+        /*SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new D;
+        dateFormat.format(date);
+         */
         String jwtToken = JWT.create().withClaim("Id", adminstrador.getIdAdministrador()).withClaim("disco", adminstrador.getDiscotecaidDiscoteca().getIdDiscoteca()).withExpiresAt(c.getTime()).sign(Algorithm.HMAC256("QWHDIKSEUNSJHDE"));
 
         JWTE token = new com.example.Logic.JWTE(adminstrador.getIdAdministrador().toString(), jwtToken);
 
         return token;
     }
+/*
+    private void prueba() throws Exception {
+        Calendar c = Calendar.getInstance();
+        Date date = new Date();
+        String dt = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + (c.get(Calendar.HOUR_OF_DAY) + 1) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+        System.out.println("dt apenas se crea: " + dt);
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        c.setTime(sdf.parse(dt));
+        c.add(Calendar.DATE, 1);
+        dt = sdf.format(c.getTime());
+
+        System.out.println("total " + c.getTime());
+        System.out.println("Dia ---> " + c.getTime().getDate());
+        System.out.println("Mes ---> " + (c.getTime().getMonth() + 1));
+        System.out.println("Hora---> " + c.getTime().getHours());
+        System.out.println("Minuto ---> " + c.getTime().getMinutes());
+
+    }
+
+    public static void main(String[] args){
+        AdministradorLogica administradorLogica = new AdministradorLogica();
+       try{
+        administradorLogica.prueba();
+       }catch(Exception e){
+           e.getMessage();
+       }
+    }*/
     private int generarNumeroConsecuenteAdministrador() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
@@ -292,11 +325,22 @@ public class AdministradorLogica {
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    public static int[] verificarJWT(String jwt) throws BadRequestException, ForbiddenException, NotFoundException {
+    public static int[] verificarJWT(String jwt) throws BadRequestException, ForbiddenException, NotFoundException, Exception {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         DecodedJWT dec = JWT.decode(jwt);
         int[] claims = new int[2];
-        if (dec.getExpiresAt().getDate() < Calendar.DATE) {
+
+
+        Calendar c = Calendar.getInstance();
+        Date date = new Date();
+        String dt = "2017" + "-" + (dec.getExpiresAt().getMonth() + 1) + "-" + dec.getExpiresAt().getDate() + " " + dec.getExpiresAt().getHours() + ":" + dec.getExpiresAt().getMinutes() + ":" + dec.getExpiresAt().getSeconds();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        c.setTime(sdf.parse(dt));
+        dt = sdf.format(c.getTime());
+
+        
+        if (c.getTime().compareTo(Calendar.getInstance().getTime()) < 0) {
+
             throw new ForbiddenException("Token has expired");
         }
 
@@ -306,6 +350,7 @@ public class AdministradorLogica {
         if (claim1.isNull() || claim2.isNull()) {
             throw new BadRequestException("claim is null");
         }
+
         int idAdmin = claim1.asInt();
         int idDisco = claim2.asInt();
 

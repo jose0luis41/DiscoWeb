@@ -15,7 +15,10 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.InternalServerErrorException;
 import com.google.api.server.spi.response.NotFoundException;
+import com.google.api.server.spi.response.ServiceUnavailableException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,29 +54,29 @@ public class AsistenteLogica {
      *
      * @param assistant
      * @return Asistente que se ha creado
-     * @throws Exception cuando los parametros obligatorios no son ingresados
+     * @throws BadRequestException cuando los parametros obligatorios no son ingresados
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "createAssistant", path = "createAssistant/success")
-    public Asistente createAssistant(Asistente assistant) throws Exception {
+    public Asistente createAssistant(Asistente assistant) throws BadRequestException {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
         em.getTransaction().begin();
 
         if (assistant == null) {
-            throw new Exception("El asistente es null");
+            throw new BadRequestException("El asistente es null");
         } else if (assistant.getCedula() == null || assistant.getCedula().equalsIgnoreCase("")) {
-            throw new Exception("La cedula es null");
+            throw new BadRequestException("La cedula es null");
         } else if (assistant.getContrasena() == null || assistant.getContrasena().equalsIgnoreCase("")) {
-            throw new Exception("La contrasena es null");
+            throw new BadRequestException("La contrasena es null");
         } else if (assistant.getCorreo() == null || assistant.getCorreo().equalsIgnoreCase("")) {
-            throw new Exception("El correo es null");
+            throw new BadRequestException("El correo es null");
         } else if (assistant.getFechaNacimiento() == null) {
-            throw new Exception("La cedula es null");
+            throw new BadRequestException("La cedula es null");
         } else if (assistant.getNombre() == null || assistant.getNombre().equalsIgnoreCase("")) {
-            throw new Exception("El nombre es null");
+            throw new BadRequestException("El nombre es null");
         } else if (assistant.getTelefono() == null || assistant.getTelefono().equalsIgnoreCase("")) {
-            throw new Exception("El telefono es null");
+            throw new BadRequestException("El telefono es null");
         }
 
         assistant.setIdAsistente(generarNumeroConsecuenteAsistente());
@@ -94,26 +97,26 @@ public class AsistenteLogica {
      * @param fechaNacimiento
      * @param contrasena
      * @return
-     * @throws Exception
+     * @throws BadRequestException
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT, name = "editAssistant", path = "editAssistant")
-    public Asistente editAssistant(@Named("Id") String cedula, @Named("Name") String assistantName, @Named("Email") String correo, @Named("Telephone") String telefono, @Named("Birthday") Date fechaNacimiento, @Named("Password") String contrasena) throws Exception {
+    public Asistente editAssistant(@Named("Id") String cedula, @Named("Name") String assistantName, @Named("Email") String correo, @Named("Telephone") String telefono, @Named("Birthday") Date fechaNacimiento, @Named("Password") String contrasena) throws BadRequestException {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
 
         if (cedula == null || cedula.equalsIgnoreCase("")) {
-            throw new Exception("La cedula es null");
+            throw new BadRequestException("La cedula es null");
         } else if (assistantName == null || assistantName.equalsIgnoreCase("")) {
-            throw new Exception("El nombre es null");
+            throw new BadRequestException("El nombre es null");
         } else if (correo == null || correo.equalsIgnoreCase("")) {
-            throw new Exception("El correo es null");
+            throw new BadRequestException("El correo es null");
         } else if (fechaNacimiento == null) {
-            throw new Exception("La fecha de nacimiento es null");
+            throw new BadRequestException("La fecha de nacimiento es null");
         } else if (telefono == null || telefono.equalsIgnoreCase("")) {
-            throw new Exception("El telefono es null");
+            throw new BadRequestException("El telefono es null");
         } else if (contrasena == null || contrasena.equalsIgnoreCase("")) {
-            throw new Exception("La contrasena es null");
+            throw new BadRequestException("La contrasena es null");
         }
 
         Asistente assistantFound = em.createNamedQuery("Asistente.findByCedula", Asistente.class).setParameter("cedula", cedula).getSingleResult();
@@ -155,16 +158,16 @@ public class AsistenteLogica {
      *
      * @param cedula
      * @return
-     * @throws Exception
+     * @throws BadRequestException
      */
     @ApiMethod(name = "findAssistant", path = "findAssistant")
-    public Asistente findAssistant(@Named("cedula") String cedula) throws Exception {
+    public Asistente findAssistant(@Named("cedula") String cedula) throws BadRequestException {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
 
         Asistente assistantFound = em.createNamedQuery("Asistente.findByCedula", Asistente.class).setParameter("cedula", cedula).getSingleResult();
         if (assistantFound == null) {
-            throw new Exception("No existe el asistente con la cedula: " + cedula);
+            throw new BadRequestException("No existe el asistente con la cedula: " + cedula);
         }
 
         em.getTransaction().commit();
@@ -179,16 +182,16 @@ public class AsistenteLogica {
      *
      * @param correo
      * @return
-     * @throws Exception
+     * @throws BadRequestException
      */
     @ApiMethod(name = "findAssistantByCorreo", path = "findAssistantByCorreo")
-    public Asistente findAssistantByCorreo(@Named("correo") String correo) throws Exception {
+    public Asistente findAssistantByCorreo(@Named("correo") String correo) throws BadRequestException {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
         em.getTransaction().begin();
 
         Asistente assistantFound = em.createNamedQuery("Asistente.findByCorreo", Asistente.class).setParameter("correo", correo).getSingleResult();
         if (assistantFound == null) {
-            throw new Exception("No existe el Asistente con el correo: " + correo);
+            throw new BadRequestException("No existe el Asistente con el correo: " + correo);
         }
 
         em.getTransaction().commit();
@@ -202,11 +205,12 @@ public class AsistenteLogica {
      * asistente en el sistema Method: Get
      *
      * @param correo
-     * @throws Exception
+     * @throws BadRequestException
+     * @throws NotFoundException
      * @return Asistente encontrado
      */
     @ApiMethod(name = "loginAssistant", path = "loginAssistant/success")
-    public JWTE getLoginAsistente(@Named("correo") String correo) throws Exception {
+    public JWTE getLoginAsistente(@Named("correo") String correo) throws BadRequestException,NotFoundException, UnsupportedEncodingException{
 
         if (correo == null || correo.equalsIgnoreCase("")) {
             throw new BadRequestException("No se ha escrito correos");
@@ -217,7 +221,7 @@ public class AsistenteLogica {
         em.getTransaction().begin();
         Asistente asistente = em.createNamedQuery("Asistente.findByCorreo", Asistente.class).setParameter("correo", correo).getSingleResult();
         if (asistente == null) {
-            throw new NoResultException("No existe el asistente con correo " + correo);
+            throw new NotFoundException("No existe el asistente con correo " + correo);
         }
         em.getTransaction().commit();
        
@@ -225,9 +229,11 @@ public class AsistenteLogica {
         String dt = date.getYear()+"-"+date.getMonth()+"-"+date.getDay();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
-        c.setTime(sdf.parse(dt));
+       
+        //c.setTime(sdf.parse(dt));
         c.add(Calendar.DATE, 1);
         dt = sdf.format(c.getTime());
+       
         String jwtToken = JWT.create().withClaim("Id", asistente.getIdAsistente()).withExpiresAt(c.getTime()).sign(Algorithm.HMAC256("QWHDIKSEUNSJHDE"));
         
         JWTE token = new com.example.Logic.JWTE(asistente.getIdAsistente().toString(), jwtToken);

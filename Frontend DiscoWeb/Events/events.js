@@ -70,13 +70,6 @@ table.onclick = function getIdEventSelected(e) {
     }
 
     localStorage.setItem('idEvento',data[0]);
-    var prueba = localStorage.getItem('idEvento');
-    console.log(prueba);
-
-    console.log(""+data[0]);
-
-  //  window.location="/Events/detallesEventos.html";
-    
 };
 
 
