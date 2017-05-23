@@ -24,30 +24,36 @@ and open the template in the editor.
             <li><a href="#about">About</a></li>
         </ul>
         <div class="jumbotron">
-            <h1 align ="center"> TRANSACCION -  {{estadoT}} </h1>
+            <h1 align ="center"> QR CODE </h1>
         </div>
+        <h1 id = "qr">{{codeQR}}</h1>
         <div>
-        <p style="font-size:160%;">Senor(a) La informacion de su transaccion es la siguiente:<br>
-            Fecha: {{fechaT}} <br>
-            Monto: {{montoT}} <br>
-            Referencia: {{referenceT}} <br>
-            Por favor revise su correo electronico: {{correoT}} <br>
-            > Descargue su TICKET (QR Code) <br>
-            > PayU envia el estado de la transaccion tambien a su correo.<br>
-            ----------------------------------------------------------------------------<br>
-            Gracias por comprar por nuestra pagina web 
-        </p>   
+            <p style="font-size:160%;">Senor(a) el siguiente codigo QR es su ticket que le permitirá ingresar a la discoteca:
+                <br>
+                ----------------------------------------------------------------------------<br>
+            </p> 
+            <div id="qrcode">
+            </div> 
+            <p style="font-size:160%;">
+                Gracias por comprar por nuestra pagina web 
+            </p>
         </div>
-        <div align = "center">
-        <a class="btn btn-info btn-lg" onclick="newPage()">
-          <span class="glyphicon glyphicon-pencil"></span> Volver a eventos
-        </a>
-        </div>
-        
-        <script language="JavaScript">
-            function newPage(){
-                    window.location = "/Events/VistaEventos.html";
-                }
+
+        <script type="text/javascript" src="qrcode2.js"></script>
+
+        <script type="text/javascript">
+
+var typeNumber = 4;
+var errorCorrectionLevel = 'L';
+var qr = qrcode(typeNumber, errorCorrectionLevel);
+
+qr.addData(document.getElementById('qr'));
+qr.make();
+document.getElementById('qrcode').innerHTML = qr.createImgTag(10, 10);
+
+
+
+
         </script>
     </body>
 </html>

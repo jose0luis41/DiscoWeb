@@ -82,13 +82,12 @@ public class EntradaLogic {
         ticket.setCodigoQR(ticket.getIdEntrada() + "-" + ticket.getAsistenteEventoidAsistenteEvento().getIdAsistenteEvento());
 
         em.persist(ticket);
-        envioDeEntradasPorCorreo(eventAsisstant.getAsistenteidAsistente().getCorreo(), ticket.getCodigoQR());
-
+        
         em.getTransaction().commit();
         return ticket;
     }
 
-    private void envioDeEntradasPorCorreo(String usuario, String contenido) throws IOException {
+    public void envioDeEntradasPorCorreo(String usuario, String contenido) throws IOException {
         Email from = new Email("contacto@discoweb.com.co");
         String subject = "Ticket";
         Email to = new Email(usuario);
