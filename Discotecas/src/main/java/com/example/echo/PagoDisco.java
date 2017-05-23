@@ -3,27 +3,27 @@ package com.example.echo;
 import com.example.Logic.EntradaLogic;
 import com.example.beans.AsistenteEvento;
 import com.example.beans.Entrada;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import com.google.api.server.spi.config.ApiMethod;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "pagoDisco", value = "/pagoDisco")
+//@WebServlet(name = "pagoDisco", value = "/pagoDisco")
 public class PagoDisco extends HttpServlet {
 
     public static final long serialversionUID = 1L;
     private Echo delegate;
     private EntradaLogic el;
+
+    private static final Logger log = LoggerFactory.getLogger(PagoDisco.class);
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -43,11 +43,11 @@ public class PagoDisco extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
-    @ApiMethod(name = "pagoDisco")
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        System.err.println("ENTRO GET");
+
+        log.info("Entro al get ");
         int transactionState = Integer.parseInt(req.getParameter("transactionState"));
 
         String fecha = req.getParameter("processingDate");
@@ -97,7 +97,7 @@ public class PagoDisco extends HttpServlet {
 
     //PAGINA DE CONFIRMACION
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         Double state_pol = Double.parseDouble(req.getParameter("state_pol"));
@@ -117,7 +117,7 @@ public class PagoDisco extends HttpServlet {
                 System.out.println("trajo el asisevento");
                 Entrada e = delegate.createTicket(as.getIdAsistenteEvento());
                 System.out.println("creo la entrada");
-                
+
                 String qrcode = e.getCodigoQR();
                 InputStreamReader inputStreamReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("templateCorreo.html"), "UTF-8");
                 BufferedReader br = new BufferedReader(inputStreamReader);
@@ -130,12 +130,12 @@ public class PagoDisco extends HttpServlet {
                 }
                 String correoL = "";
                 String content = sb.toString();
-                
+
                 String qrL = content.replaceAll("\\{\\{codeQR\\}\\}", qrcode);
 
                 el.envioDeEntradasPorCorreo(correoUsu, qrL);
             } catch (Exception ex) {
-                Logger.getLogger(PagoDisco.class.getName()).log(Level.SEVERE, null, ex);
+                log.info("Exception");
             }
         } else if (state_pol == 5) {
 
