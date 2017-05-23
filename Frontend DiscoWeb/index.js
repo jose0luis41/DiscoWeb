@@ -1,14 +1,14 @@
 
  function initLogin() {  
-    //var ROOT = 'https://cali-planner.appspot.com/_ah/api';
-    var ROOT_LOCAL = 'http://localhost:8080/_ah/api'; 
+    var ROOT = 'https://disco-web.appspot.com/_ah/api';
+    //var ROOT_LOCAL = 'http://localhost:8080/_ah/api'; 
   
     var apisToLoad;
 
     var callback = function() {
 
     }
-    gapi.client.load('echo', 'v1', callback, ROOT_LOCAL);
+    gapi.client.load('echo', 'v1', callback, ROOT);
 }
 
 

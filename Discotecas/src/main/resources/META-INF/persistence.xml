@@ -13,19 +13,19 @@
     <properties>
       <property name="datanucleus.identifier.case" value="MixedCase"/>
       <!-- LOCAL     --> 
-      
+      <!-- 
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mydb"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="javax.persistence.jdbc.password" value=""/>-->
       
       
       <!-- PRODUCCION    -->
-      <!-- Production
+      <!-- Production-->
       <property name="javax.persistence.jdbc.url" value="jdbc:google:mysql://disco-web:us-central1:disco-web-db/mydb"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.GoogleDriver"/>
-      <property name="javax.persistence.jdbc.password" value="password"/> -->
+      <property name="javax.persistence.jdbc.password" value="password"/> 
     </properties>
   </persistence-unit>
 </persistence>
