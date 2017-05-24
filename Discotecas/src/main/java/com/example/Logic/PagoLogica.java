@@ -90,3 +90,66 @@ public class PagoLogica {
 
     }
 }
+
+
+
+
+
+//PAGINA DE CONFIRMACION
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException 
+     */
+/*
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        //Double state_pol = Double.parseDouble(req.getParameter("state_pol"));
+        String state_pol =req.getParameter("state_pol");
+        String message = "";
+        if (state_pol.equalsIgnoreCase("4")) {
+            int idEvento = Integer.parseInt(req.getParameter("extra1"));
+            System.out.println(idEvento + "");
+            String correoUsu = req.getParameter("email_buyer");
+            System.out.println(correoUsu + "");
+
+            try {
+
+                AsistenteEvento as = delegate.createAssistantEvent(correoUsu, idEvento);
+                Entrada e = delegate.createTicket(as.getIdAsistenteEvento());
+
+                String qrcode = e.getCodigoQR();
+                InputStreamReader inputStreamReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("templateCorreo.html"), "UTF-8");
+                BufferedReader br = new BufferedReader(inputStreamReader);
+
+        
+      
+                 String qrL = content.replaceAll("\\{\\{codeQR\\}\\}", qrcode);
+                System.out.println("antes de enviar el correo");
+                System.out.println(qrL);
+
+                el.envioDeEntradasPorCorreo(correoUsu, qrL);
+            } catch (BadRequestException | IOException ex) {
+                StringWriter errors = new StringWriter();
+                ex.printStackTrace(new PrintWriter(errors));
+                log.info(errors.toString());
+                
+            }
+        } else if (state_pol.equalsIgnoreCase("5")) {
+
+            
+            }
+           
+        } 
+        
+         */
+    
+
+
+
+
+

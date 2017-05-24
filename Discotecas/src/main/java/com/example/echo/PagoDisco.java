@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.logging.Logger;
 
-//@WebServlet(name = "pagoDisco", value = "/pagoDisco")
 public class PagoDisco extends HttpServlet {
 
     public static final long serialversionUID = 1L;
@@ -47,8 +46,6 @@ public class PagoDisco extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
-        log.info("Entro al get ");
         int transactionState = Integer.parseInt(req.getParameter("transactionState"));
 
         String fecha = req.getParameter("processingDate");
@@ -66,13 +63,14 @@ public class PagoDisco extends HttpServlet {
             sb.append(line);
         }
         String correoL = "";
+        String estadoL = "";
         String content = sb.toString();
         String estado = "";
         switch (transactionState) {
             case 4:
 
                 estado = "APROBADA";
-                String estadoL = content.replaceAll("\\{\\{estadoT\\}\\}", estado);
+                estadoL = content.replaceAll("\\{\\{estadoT\\}\\}", estado);
                 String fechaL = estadoL.replaceAll("\\{\\{fechaT\\}\\}", fecha);
                 String montoL = fechaL.replaceAll("\\{\\{montoT\\}\\}", monto);
                 String referenceL = montoL.replaceAll("\\{\\{referenceT\\}\\}", referencia);
@@ -80,12 +78,12 @@ public class PagoDisco extends HttpServlet {
                 break;
             case 7:
                 estado = "PENDIENTE";
-                String estadoP = content.replaceAll("\\{\\{estadoT\\}\\}", estado);
+                estadoL = content.replaceAll("\\{\\{estadoT\\}\\}", estado);
                 //mensajeRespuesta = "la transacción esta en estado pendiente pendiente ...";
                 break;
             case 6:
                 estado = "INVALIDA";
-                String estadoI = content.replaceAll("\\{\\{estadoT\\}\\}", estado);
+                estadoL = content.replaceAll("\\{\\{estadoT\\}\\}", estado);
                 //  mensajeRespuesta = "Señor usuario verifique si existen entradas o si no tiene fondos.";
                 break;
             default:
@@ -93,57 +91,56 @@ public class PagoDisco extends HttpServlet {
         }
         PrintWriter out = resp.getWriter();
         out.println(correoL);
-
     }
-
-    //PAGINA DE CONFIRMACION
+    
+    
+    
+      //PAGINA DE CONFIRMACION
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException 
+     */
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        
+        Double state_pol = Double.parseDouble(req.getParameter("state_pol"));
+        if (state_pol == 4) {
+         
 
-        //Double state_pol = Double.parseDouble(req.getParameter("state_pol"));
-        String state_pol =req.getParameter("state_pol");
-        String message = "";
-        if (state_pol.equalsIgnoreCase("4")) {
-            int idEvento = Integer.parseInt(req.getParameter("extra1"));
-            System.out.println(idEvento + "");
+        int idEvento = Integer.parseInt(req.getParameter("extra1"));
+
+        try {
             String correoUsu = req.getParameter("email_buyer");
-            System.out.println(correoUsu + "");
+            AsistenteEvento as = delegate.createAssistantEvent(correoUsu, idEvento);
+            Entrada e = delegate.createTicket(as.getIdAsistenteEvento());
+            String qrcode = e.getCodigoQR();
+            InputStreamReader inputStreamReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("templateCorreo.html"), "UTF-8");
+            BufferedReader br = new BufferedReader(inputStreamReader);
 
-            try {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
 
-                AsistenteEvento as = delegate.createAssistantEvent(correoUsu, idEvento);
-                Entrada e = delegate.createTicket(as.getIdAsistenteEvento());
-
-                String qrcode = e.getCodigoQR();
-                InputStreamReader inputStreamReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("templateCorreo.html"), "UTF-8");
-                BufferedReader br = new BufferedReader(inputStreamReader);
-
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-
-                    sb.append(line);
-                }
-                String correoL = "";
-                String content = sb.toString();
-
-                String qrL = content.replaceAll("\\{\\{codeQR\\}\\}", qrcode);
-                System.out.println("antes de enviar el correo");
-                System.out.println(qrL);
-
-                el.envioDeEntradasPorCorreo(correoUsu, qrL);
-            } catch (BadRequestException | IOException ex) {
-                StringWriter errors = new StringWriter();
-                ex.printStackTrace(new PrintWriter(errors));
-                log.info(errors.toString());
-                
+                sb.append(line);
             }
-        } else if (state_pol.equalsIgnoreCase("5")) {
+            String content = sb.toString();
+            String qrL = content.replaceAll("\\{\\{codeQR\\}\\}", qrcode);
+            el.envioDeEntradasPorCorreo(correoUsu, qrL);
+        } catch (Exception ex) {
+            log.info("Exception");
+        }
+        
+    } else if (state_pol == 5) {
 
-        } else if (state_pol.equalsIgnoreCase("6")) {
+        } else if (state_pol == 6) {
 
         }
-
-    }
+         
+    }    
 }
+
+
