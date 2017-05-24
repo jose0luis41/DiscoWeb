@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
  */
 public class EntradaLogic {
 
+     public static String API_KEY = "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";
 
 
     /**
@@ -89,7 +90,45 @@ public class EntradaLogic {
         return ticket;
     }
 
+    public void envioDeEntradasPorCorreo(String usuario, String contenido) throws IOException {
+        
+        
+       
+        Email from = new Email("contacto@discoweb.com.co");
+        String subject = "Ticket";
+        Email to = new Email(usuario);
+        Content content = new Content("text", contenido);
+        Mail mail = new Mail(from, subject, to, content);
+       
+        //SendGrid sg = new SendGrid(API_KEY);
+        Request request = new Request();
+
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            //Response response = sg.api(request);
+            //git System.out.println(response.getStatusCode());
+            
+            // Sytln(response.headers);stem.out.println(response.body);
+            // System.out.println(response.headers);
+        } catch (IOException ex) {
+            throw ex;
+        }
+        
+    }
     
+    public static void main(String[] args){
+        EntradaLogic entradaLogic = new EntradaLogic();
+        String html ="<html> <h2> hola </h2> </html>"; 
+
+        try {
+            entradaLogic.envioDeEntradasPorCorreo("jose0luis41@gmail.com", html);
+        } catch (IOException ex) {
+            Logger.getLogger(EntradaLogic.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 
     private int generarNumeroConsecuenteEntrada() {
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
