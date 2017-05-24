@@ -26,7 +26,9 @@ import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import javax.servlet.ServletException;
 
 /**
  * The Echo API which Endpoints will be exposing.
@@ -48,6 +50,7 @@ public class Echo {
     private final DiscotecaLogic discotecaLogic;
     private final EventoLogica eventoLogica;
     private final AsistenteEventoLogica asistenteEventoLogic;
+    private final PagoLogica pagoLogica;
 
     public Echo() {
         eventoLogica = new EventoLogica();
@@ -57,6 +60,7 @@ public class Echo {
         reservaLogic = new ReservaLogic();
         entradaLogic = new EntradaLogic();
         asistenteEventoLogic = new AsistenteEventoLogica();
+        pagoLogica = new PagoLogica();
     }
 
     /**
@@ -149,10 +153,10 @@ public class Echo {
      *
      * @param correo
      * @return
-     * @throws NotFoundException 
+     * @throws NotFoundException
      * @throws BadRequestException
      */
-    public JWTE getLoginAsistente(@Named("correo") String correo) throws BadRequestException,NotFoundException, UnsupportedEncodingException{
+    public JWTE getLoginAsistente(@Named("correo") String correo) throws BadRequestException, NotFoundException, UnsupportedEncodingException {
         return assistantLogic.getLoginAsistente(correo);
     }
 
@@ -237,7 +241,7 @@ public class Echo {
         return administratorLogic.findAdministratorByCorreo(correo);
     }
 
-    public List<Evento> getEventsByAdministrators(@Named("idDiscoteca") Integer idDiscoteca) {
+    public List<Evento> EventsByAdministrators(@Named("idDiscoteca") Integer idDiscoteca) {
         return administratorLogic.getEventsByAdministrators(idDiscoteca);
     }
 
@@ -275,9 +279,9 @@ public class Echo {
      *
      * @param idAsistenteEvento
      * @return Entrada creada
-     * @throws Exception
+     * 
      */
-    public Entrada createTicket(@Named("Idasistente") Integer idAsistenteEvento) throws Exception {
+    public Entrada createTicket(@Named("Idasistente") Integer idAsistenteEvento){
         return entradaLogic.createTicket(idAsistenteEvento);
     }
 
@@ -357,7 +361,7 @@ public class Echo {
      * @throws NotFoundException
      * @throws UnauthorizedException
      */
-    public Discoteca deleteDisco(@Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException,Exception {
+    public Discoteca deleteDisco(@Named("nombre") String nombre, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
         return discotecaLogic.deleteDisco(nombre, jwt);
     }
 
@@ -372,10 +376,16 @@ public class Echo {
      * Name: getDiscos Description: Delegado que consulta todas las discotecas
      * en el sistema Method: Get
      *
-     * @return Lista de discotecas en el sistema
+     * @param jwt
+     * @return
+     * @throws Exception
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
-    public List<Evento> getEvents() {
-        return eventoLogica.getEvents();
+    public List<Evento> getEvents(@Named("jwt") String jwt) throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
+        return eventoLogica.getEvents(jwt);
     }
 
     /**
@@ -444,7 +454,7 @@ public class Echo {
      * @throws NotFoundException
      * @throws UnauthorizedException
      */
-    public Evento deleteEvent(@Named("idEvento") Integer idEvento, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException,Exception {
+    public Evento deleteEvent(@Named("idEvento") Integer idEvento, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
         return eventoLogica.deleteEvent(idEvento, jwt);
     }
 
@@ -472,9 +482,9 @@ public class Echo {
      * @param cedula
      * @param idEvento
      * @return
-     * @throws Exception
+     * @throws BadRequestException
      */
-    public AsistenteEvento createAssistantEvent(@Named("cedulaAsistente") String cedula, @Named("idEvento") Integer idEvento) throws Exception {
+    public AsistenteEvento createAssistantEvent(@Named("cedulaAsistente") String cedula, @Named("idEvento") Integer idEvento)throws BadRequestException {
 
         return asistenteEventoLogic.createAssistantEvent(cedula, idEvento);
     }
@@ -501,6 +511,10 @@ public class Echo {
      */
     public AsistenteEvento findAssistantEvent(@Named("idAsistenteEvento") Integer idAsistenteEvento) throws Exception {
         return asistenteEventoLogic.findAssistantEvent(idAsistenteEvento);
+    }
+
+    public void confirmarPago(@Named("state_pol") String state_pol, @Named("extra1") String extra1, @Named("email_buyer") String email_buyer) throws BadRequestException{
+        pagoLogica.confirmarPago(state_pol, extra1, email_buyer);
     }
 
 }

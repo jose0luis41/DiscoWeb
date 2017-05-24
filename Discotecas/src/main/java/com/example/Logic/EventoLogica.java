@@ -5,7 +5,10 @@
  */
 package com.example.Logic;
 
-import com.example.beans.Adminstrador;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.beans.Asistente;
 import com.example.beans.Evento;
 import com.example.beans.Discoteca;
 import com.example.persistence.ClassEntityManagerFactory;
@@ -16,6 +19,8 @@ import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -26,23 +31,49 @@ import javax.persistence.EntityManager;
  */
 public class EventoLogica {
 
+ 
     /**
      * Name: getEvents Description: Endpoint que consulta todos los eventos en
      * el sistema Method: Get
      *
-     * @return Lista de eventos en el sistema
+     * @param jwt
+     * @return
+     * @throws Exception
+     * @throws BadRequestException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
     @ApiMethod(name = "showAssistants")
-    public List<Evento> getEvents() {
+    public List<Evento> getEvents(@Named("jwt") String jwt) throws Exception, BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
+
+        DecodedJWT dec = JWT.decode(jwt);
+        int[] claims = new int[2];
+        
+      
+
+        if (dec.getExpiresAt().compareTo(Calendar.getInstance().getTime()) < 0) {
+
+            throw new ForbiddenException("Token has expired");
+        }
+
+        Claim claim1 = dec.getClaim("Id");
+
+        int idAsistente = claim1.asInt();
+        
+        Asistente asistenteTmp = em.createNamedQuery("Asistente.findByIdAsistente", Asistente.class).setParameter("idAsistente", idAsistente).getSingleResult();
+                
+        if(asistenteTmp ==null){
+            throw new UnauthorizedException("No puedes acceder a esta pagina");
+        }
         em.getTransaction().begin();
         List<Evento> events = em.createNamedQuery("Evento.findAll", Evento.class).getResultList();
         em.getTransaction().commit();
         return events;
     }
 
-  
     /**
      * Name: createUser Description: Endpoint que crea un nuevo usuario en el
      * sistema Method: Post
@@ -182,7 +213,7 @@ public class EventoLogica {
      * @throws UnauthorizedException
      */
     @ApiMethod(name = "deleteEvent", path = "deleteEvent/{idEvento}")
-    public Evento deleteEvent(@Named("idEvento") Integer idEvento,@Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException,Exception {
+    public Evento deleteEvent(@Named("idEvento") Integer idEvento, @Named("jwt") String jwt) throws BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException, Exception {
 
         int[] claims = AdministradorLogica.verificarJWT(jwt);
 

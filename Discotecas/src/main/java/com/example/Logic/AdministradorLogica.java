@@ -248,7 +248,7 @@ public class AdministradorLogica {
         em.getTransaction().begin();
         Adminstrador adminstrador = em.createNamedQuery("Adminstrador.findByCorreo", Adminstrador.class).setParameter("correo", correo).getSingleResult();
         if (adminstrador == null) {
-            throw new NoResultException("No existe el administrador con correo " + correo);
+            throw new NotFoundException("No existe el administrador con correo " + correo);
         }
         em.getTransaction().commit();
 

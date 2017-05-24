@@ -1,14 +1,15 @@
 
  function initLogin() {  
-    var ROOT = 'https://disco-web.appspot.com/_ah/api';
-    //var ROOT_LOCAL = 'http://localhost:8080/_ah/api'; 
+   // var ROOT = 'https://disco-web.appspot.com/_ah/api';
+    var ROOT_LOCAL = 'http://localhost:8080/_ah/api'; 
   
     var apisToLoad;
 
     var callback = function() {
 
     }
-    gapi.client.load('echo', 'v1', callback, ROOT);
+    gapi.client.load('echo', 'v1', callback, ROOT_LOCAL);
+    //gapi.client.load('echo', 'v1', callback, ROOT);
 }
 
 
@@ -40,11 +41,14 @@ var password = document.getElementById("passwordAdministrator").value;
 
             }else if(resp.code ===400){
                     alert(resp.error);
-            }else if(resp.code==503){
-                alert('Error backend'+ resp.error);
+            }else if(resp.code === 404){
+                alert('Debes escribir el correo');
+            }
+            else if(resp.code==503){
+                alert('No se encuentra el administrador con el correo '+ usernameAdmin);
             }
             else{
-                alert("Error "+ resp.error);
+                alert('Debes escribir un correo');
             }
          
               

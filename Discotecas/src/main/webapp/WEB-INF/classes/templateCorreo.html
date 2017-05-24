@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+
 <html>
     <head>
         <!--CSS files-->
@@ -33,28 +29,13 @@ and open the template in the editor.
                 <br>
                 ----------------------------------------------------------------------------<br>
             </p> 
-            <div id="qrcode">
-            </div> 
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=prueba" alt="" height="150" width="150">
+            
             <p style="font-size:160%;">
                 Gracias por comprar por nuestra pagina web 
             </p>
         </div>
 
-        <script type="text/javascript" src="qrcode2.js"></script>
 
-        <script type="text/javascript">
-
-var typeNumber = 4;
-var errorCorrectionLevel = 'L';
-var qr = qrcode(typeNumber, errorCorrectionLevel);
-
-qr.addData(document.getElementById('qr'));
-qr.make();
-document.getElementById('qrcode').innerHTML = qr.createImgTag(10, 10);
-
-
-
-
-        </script>
     </body>
 </html>

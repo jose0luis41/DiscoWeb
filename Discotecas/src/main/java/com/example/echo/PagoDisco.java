@@ -3,18 +3,19 @@ package com.example.echo;
 import com.example.Logic.EntradaLogic;
 import com.example.beans.AsistenteEvento;
 import com.example.beans.Entrada;
+import com.google.api.server.spi.response.BadRequestException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 //@WebServlet(name = "pagoDisco", value = "/pagoDisco")
 public class PagoDisco extends HttpServlet {
@@ -23,7 +24,7 @@ public class PagoDisco extends HttpServlet {
     private Echo delegate;
     private EntradaLogic el;
 
-    private static final Logger log = LoggerFactory.getLogger(PagoDisco.class);
+    private static final Logger log = Logger.getLogger(PagoDisco.class.getName());
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -100,23 +101,19 @@ public class PagoDisco extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        Double state_pol = Double.parseDouble(req.getParameter("state_pol"));
+        //Double state_pol = Double.parseDouble(req.getParameter("state_pol"));
+        String state_pol =req.getParameter("state_pol");
         String message = "";
-        System.out.println("Entro al doPost");
-        if (state_pol == 4) {
+        if (state_pol.equalsIgnoreCase("4")) {
             int idEvento = Integer.parseInt(req.getParameter("extra1"));
-            System.out.println("Trajo el evento");
             System.out.println(idEvento + "");
             String correoUsu = req.getParameter("email_buyer");
-            System.out.println("Trajo el correo");
             System.out.println(correoUsu + "");
 
             try {
 
                 AsistenteEvento as = delegate.createAssistantEvent(correoUsu, idEvento);
-                System.out.println("trajo el asisevento");
                 Entrada e = delegate.createTicket(as.getIdAsistenteEvento());
-                System.out.println("creo la entrada");
 
                 String qrcode = e.getCodigoQR();
                 InputStreamReader inputStreamReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("templateCorreo.html"), "UTF-8");
@@ -132,14 +129,19 @@ public class PagoDisco extends HttpServlet {
                 String content = sb.toString();
 
                 String qrL = content.replaceAll("\\{\\{codeQR\\}\\}", qrcode);
+                System.out.println("antes de enviar el correo");
+                System.out.println(qrL);
 
                 el.envioDeEntradasPorCorreo(correoUsu, qrL);
-            } catch (Exception ex) {
-                log.info("Exception");
+            } catch (BadRequestException | IOException ex) {
+                StringWriter errors = new StringWriter();
+                ex.printStackTrace(new PrintWriter(errors));
+                log.info(errors.toString());
+                
             }
-        } else if (state_pol == 5) {
+        } else if (state_pol.equalsIgnoreCase("5")) {
 
-        } else if (state_pol == 6) {
+        } else if (state_pol.equalsIgnoreCase("6")) {
 
         }
 

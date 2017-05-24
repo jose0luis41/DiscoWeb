@@ -11,6 +11,7 @@ import com.example.beans.Evento;
 import com.example.persistence.ClassEntityManagerFactory;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
+import com.google.api.server.spi.response.BadRequestException;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -40,26 +41,26 @@ public class AsistenteEventoLogica {
      * Name: createAssistantEvent Description: Endpoint que crea un nuevo
      * asistente a un evento en el sistema Method: Post
      *
-     * @param cedula
+     * @param correo
      * @param idEvento
      * @return Asistente a evento que se ha creado
-     * @throws Exception cuando los parametros obligatorios no son ingresados
+     * @throws BadRequestException cuando los parametros obligatorios no son ingresados
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "createAssistantEvent", path = "createAssistantEvent/success")
-    public AsistenteEvento createAssistantEvent(@Named("cedulaAsistente") String cedula, @Named("idEvento") Integer idEvento) throws Exception {
+    public AsistenteEvento createAssistantEvent(@Named("correoAsistente") String correo, @Named("idEvento") Integer idEvento) throws BadRequestException {
 
         EntityManager em = ClassEntityManagerFactory.get().createEntityManager();
 
         em.getTransaction().begin();
 
-        if (cedula == null) {
-            throw new Exception("El id del asistente es null");
+        if (correo == null) {
+            throw new BadRequestException("El id del asistente es null");
         } else if (idEvento == null) {
-            throw new Exception("El id del evento es null");
+            throw new BadRequestException("El id del evento es null");
 
         }
 
-        Asistente asistente = em.createNamedQuery("Asistente.findByCedula", Asistente.class).setParameter("cedula", cedula).getSingleResult();
+        Asistente asistente = em.createNamedQuery("Asistente.findByCorreo", Asistente.class).setParameter("correo", correo).getSingleResult();
         Evento event = em.createNamedQuery("Evento.findByIdEvento", Evento.class).setParameter("idEvento", idEvento).getSingleResult();
         AsistenteEvento asistenteEvento = new AsistenteEvento();
         asistenteEvento.setIdAsistenteEvento(generarNumeroConsecuenteAsistenteEvento());

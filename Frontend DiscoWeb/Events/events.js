@@ -1,6 +1,6 @@
  function init() {  
-    var ROOT = 'https://disco-web.appspot.com/_ah/api';
-    //var ROOT_LOCAL = 'http://localhost:8080/_ah/api'; 
+    //var ROOT = 'https://disco-web.appspot.com/_ah/api';
+    var ROOT_LOCAL = 'http://localhost:8080/_ah/api'; 
   // Loads the OAuth and helloworld APIs asynchronously, and triggers login
   // when they have completed.
     var apisToLoad;
@@ -9,14 +9,18 @@
         listarEventos();
 
     }
-    gapi.client.load('echo', 'v1', callback, ROOT);
+    gapi.client.load('echo', 'v1', callback, ROOT_LOCAL);
+    //gapi.client.load('echo', 'v1', callback, ROOT);
 }
 
 listarEventos = function() {
    var emailStoraged = localStorage.getItem('usuario'); 
+   
+   var tokenAssistant = localStorage.getItem('tokeAdmin');
    document.title = emailStoraged;
-  gapi.client.echo.echo.getEvents().execute(
+  gapi.client.echo.echo.getEvents({'jwt':tokenAssistant}).execute(
       function(resp) {
+        if( !resp.error && resp!==false){
         
     var table = document.getElementById("Events");
     var rowCount = table.rows.length;
@@ -44,7 +48,10 @@ listarEventos = function() {
                 row = table.insertRow(table.rows.length);
 
             }
-         
+    } else if(resp.code === 401){
+        alert('no tienes permiso para esta pagina');
+        window.location="/index.html";
+    }    
 
 });
 }
